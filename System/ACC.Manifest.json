@@ -1,0 +1,90 @@
+{
+  "ACC": {
+    "Name": "AlienCyborg Codes",
+    "Version": "1.0.0",
+    "Description": "ACC is a workflow-based control language used to instruct AlienCyborg AI Agent in a clean, deterministic, and ecosystem-safe way.",
+    "Author": "AlienCyborg",
+    "Scope": [
+      "Aliens WebOS",
+      "Aliens Python Ecosystem",
+      "VS Code",
+      "Azure AI",
+      "GitHub Copilot Custom Agent"
+    ]
+  },
+
+  "AgentCapabilities": {
+    "FileSystem": {
+      "CanCreate": true,
+      "CanEdit": true,
+      "CanDelete": false
+    },
+    "Production": {
+      "CanModifyProdCode": true
+    },
+    "Database": {
+      "CanTouchDatabase": true
+    }
+  },
+
+  "ExecutionModes": {
+    "Auto": {
+      "ApprovalRequired": false,
+      "Description": "Workflow executes immediately without human approval."
+    },
+    "Manual": {
+      "ApprovalRequired": true,
+      "Description": "Workflow pauses at approval checkpoints and requires human confirmation."
+    }
+  },
+
+  "WorkflowGovernance": {
+    "WorkflowCreation": "CoreTeamOnly",
+    "WorkflowExecution": "Anyone",
+    "SingleFilePerWorkflow": true,
+    "GlobalManifestOnly": true
+  },
+
+  "WorkflowDefaults": {
+    "DefaultExecutionMode": "Auto",
+    "DefaultQualityMode": "Standard",
+    "AllowNestedWorkflows": true,
+    "AllowMultipleTargets": true
+  },
+
+  "ApprovalRules": {
+    "TriggerOn": [
+      "ProductionCodeChange",
+      "DatabaseSchemaChange",
+      "SecuritySensitiveOperation"
+    ],
+    "ManualModeOnly": true
+  },
+
+  "WorkflowRegistry": {
+    "RootPath": "AlienCyborg/Workflows/",
+    "Categories": {
+      "WebOS": "WebOS Engine related workflows",
+      "WebSDK": "SDK and module workflows",
+      "WebApp": "Business application workflows",
+      "WebBrand": "Branding and design workflows"
+    }
+  },
+
+  "SafetyRules": {
+    "HardLimits": [
+      "NoFileDeletion",
+      "NoUnauthorizedExternalAccess"
+    ],
+    "SoftLimits": [
+      "PreferPerformanceOverOverEngineering",
+      "PreferClarityOverComplexity"
+    ]
+  },
+
+  "Logging": {
+    "Enabled": true,
+    "Level": "Summary",
+    "LogPath": "AlienCyborg/Logs/ACC.Execution.log.md"
+  }
+}

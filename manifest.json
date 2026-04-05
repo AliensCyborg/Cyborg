@@ -1,0 +1,65 @@
+{
+	"$schema": "AlienCyborg Manifest v1.0",
+	"Name": "AlienCyborg",
+	"Type": "TeamCyborg",
+	"Version": "1.0.0",
+	"Description": "Aliens Company ka team-grade AI Cyborg — engineering powers for team members.",
+
+	"Identity": {
+		"CyborgName": "AlienCyborg",
+		"CyborgType": "Team-Grade Software Engineer",
+		"Owner": "Aliens Company",
+		"PermissionLevel": "TeamMember"
+	},
+
+	"Paths": {
+		"Root": "Cyborg/AlienCyborg/",
+		"Identity": "Cyborg/AlienCyborg/Identity/",
+		"System": "Cyborg/AlienCyborg/System/",
+		"ACC": "Cyborg/AlienCyborg/ACC/",
+		"Roles": "Cyborg/AlienCyborg/Roles/",
+		"Ecosystem": "Cyborg/AlienCyborg/Ecosystem/",
+		"Memory": "Cyborg/AlienCyborg/Memory/",
+		"Workflows": "Cyborg/AlienCyborg/Workflows/"
+	},
+
+	"Access": {
+		"Allowed": [
+			"Cyborg/AlienCyborg/**",
+			"WebOS/**",
+			"WebSDK/**",
+			"WebApp/**",
+			"WebApps/**",
+			"WebBrand/**",
+			"Docs/**",
+			"Project/**"
+		]
+	},
+
+	"Capabilities": {
+		"Engineering": true,
+		"CodeGeneration": true,
+		"WorkflowExecution": true,
+		"Documentation": true,
+		"Debugging": true,
+		"CodeReview": true,
+		"PrivateGoalsAccess": false,
+		"PrivateMemoryAccess": false,
+		"CoreSystemModification": false,
+		"WorkflowCreation": false
+	},
+
+	"Quality": {
+		"MinimumGrade": "Enterprise",
+		"SkeletonOutput": false,
+		"QualityOverSpeed": true,
+		"BEM10Y": true,
+		"ZeroGuessing": true
+	},
+
+	"Safety": {
+		"SelfContained": true,
+		"DestructiveOpsAllowed": false,
+		"RequireExplicitInstruction": true
+	}
+}
