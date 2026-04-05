@@ -1,0 +1,756 @@
+---
+WorkflowId: Report-Code
+Title: "Report File Generator (Daily · Weekly · Monthly · Yearly · Dashboard)"
+Category: System
+Type: Workflow_Singular-Code
+Domain: Report
+Scope: "Generate actual report markdown files based on planning data"
+
+Status: Stable
+Version: 26.00.02
+LastUpdated: 2026-03-12
+
+Intent:
+  Summary: >
+    Report-Code ka kaam: Report-Planning se mila data use karke actual report 
+    markdown files generate karna — Daily, Weekly, Monthly, Yearly, aur Dashboard.
+    Reports enterprise-grade BI quality ki honi chahiye with charts, tables, 
+    metrics, insights, aur cross-references. Sirf missing reports generate hoti hain.
+  WhenToUse:
+    - "Report plural workflow ke child ke tor par (automatically called after Report-Planning)"
+
+Inputs:
+  Targets:
+    Format: "Single Cyborg ID"
+    Examples:
+      - "AC0000"
+  Description:
+    Format: "Inherited from parent Report workflow"
+  PlanningData:
+    Format: "Structured data from Report-Planning (WorkingDays, MissingReports, ProjectMapping)"
+
+Requires:
+  Common:
+    - "Workflows/ACC/_Common/Workflow_Universal.md"
+    - "Workflows/ACC/_Common/Workflow_Singular.md"
+    - "Workflows/ACC/_Common/Workflow_Singular-Code.md"
+  Refs:
+    - "Workflows/ACC/_Refs/ACC.Targets.md"
+    - "Workflows/ACC/_Refs/ACC.Paths.md"
+    - "Workflows/ACC/_Refs/ACC.Output.md"
+    - "Workflows/ACC/_Refs/ACC.Safety.md"
+  ParentWorkflow:
+    - "Workflows/ACC/Report/Report.md"
+
+Outputs:
+  ReportFiles:
+    - "/Aliens/Report/Cyborg/{CyborgID}/Daily_Report_YYYY-MM-DD.md"
+    - "/Aliens/Report/Cyborg/{CyborgID}/Weekly_Report_YYYY-WNN.md"
+    - "/Aliens/Report/Cyborg/{CyborgID}/Monthly_Report_YYYY-MM.md"
+    - "/Aliens/Report/Cyborg/{CyborgID}/Yearly_Report_YYYY.md"
+    - "/Aliens/Report/Cyborg/{CyborgID}/Dashboard.md"
+    - "/Aliens/Report/Project/{AppName}/Dashboard.md"
+---
+
+# Report-Code (Singular-Code)
+
+## [0] Purpose
+
+Report-Code ka kaam hai Report-Planning se collected data ko use karke **actual markdown report files** generate karna.
+
+Yeh workflow chronological order me missing reports generate karta hai:
+1. Daily Reports (oldest first)
+2. Weekly Reports
+3. Monthly Reports
+4. Yearly Reports
+5. Dashboard (always regenerated)
+
+---
+
+## [1] Generation Order (Mandatory)
+
+```
+Phase 1: Daily Reports (foundation — all other reports aggregate from these)
+  → For each missing date in chronological order
+  → Generate Daily_Report_YYYY-MM-DD.md
+  → Save to /Aliens/Report/Cyborg/{CyborgID}/
+
+Phase 2: Weekly Reports
+  → For each missing ISO week in chronological order
+  → Aggregate data from daily reports of that week
+  → Generate Weekly_Report_YYYY-WNN.md
+
+Phase 3: Monthly Reports
+  → For each missing month in chronological order
+  → Aggregate data from weekly + daily reports
+  → Generate Monthly_Report_YYYY-MM.md
+
+Phase 4: Yearly Reports
+  → For each missing year in chronological order
+  → Aggregate data from monthly reports
+  → Generate Yearly_Report_YYYY.md
+
+Phase 5: Dashboard
+  → ALWAYS regenerate (delete old + create new)
+  → Aggregate ALL data across ALL time
+  → Generate Dashboard.md
+
+Phase 6: Project-Level Dashboards (ACC Planner-Based)
+  → For each AppName discovered from ACC Planner CSVs in /Aliens/Project/ALL/
+  → Read planner CSV data (rows, status, stages, assignments)
+  → Generate planner progress Dashboard.md
+  → Save to /Aliens/Report/Project/{AppName}/
+  → NOTE: "Project" = ACC Planner, NOT code domain folders.
+```
+
+---
+
+## [2] Daily Report Template
+
+### File: `Daily_Report_YYYY-MM-DD.md`
+
+```markdown
+# 📋 DAILY WORK REPORT — {Month} {Day}, {Year} ({DayName})
+
+**Cyborg ID:** {CyborgID}  
+**Workspace:** `C:\Aliens\`  
+**Report Date:** {YYYY-MM-DD}  
+**Report Type:** Daily Progress Report  
+
+---
+
+## 📊 DAY SUMMARY
+
+| Metric | Value |
+|---|---|
+| **Day** | **{DayName}** |
+| **Files Created** | **{TotalFiles}** |
+| **Total Size** | **{TotalSize}** |
+| **Active Folders** | **{FolderCount}** |
+| **Primary Workstream** | {PrimaryWork} |
+| **Key Outcome** | {KeyOutcome} |
+
+---
+
+## 🏗️ WORK PERFORMED
+
+### Folder Activity Breakdown
+
+| Folder | Files | Size | Key Items |
+|---|---|---|---|
+| {Folder1} | {Count1} | {Size1} | {SampleFiles1} |
+| {Folder2} | {Count2} | {Size2} | {SampleFiles2} |
+| ... | ... | ... | ... |
+| **TOTAL** | **{TotalFiles}** | **{TotalSize}** | |
+
+### {WorkstreamName1}
+
+**Status:** {Status}
+
+{Detailed breakdown with:
+- Subfolder file counts
+- Key files created/modified
+- Deliverables with metrics
+- Sample file names and sizes}
+
+### {WorkstreamName2} (if applicable)
+{...}
+
+---
+
+## 📊 ANALYTICS
+
+```mermaid
+pie title "Files by Folder — {Date}"
+    "{Folder1} ({Count1})" : {Count1}
+    "{Folder2} ({Count2})" : {Count2}
+```
+
+---
+
+## 📌 KEY DELIVERABLES
+
+| # | Deliverable | Count/Size | Status |
+|---|---|---|---|
+| 1 | {Deliverable1} | {Metric1} | ✅ |
+| 2 | {Deliverable2} | {Metric2} | ✅ |
+
+---
+
+*Report generated by Report workflow · Cyborg ID: {CyborgID} · Workspace: `C:\Aliens\`*
+```
+
+### Content Rules (Daily)
+
+- **Header:** Full date with day name (verified via PowerShell)
+- **Summary table:** Always present with at minimum: files, size, folders, primary work
+- **Folder breakdown:** Every active folder listed with counts
+- **Workstream sections:** Group related folders into logical workstreams
+- **Charts:** At least 1 mermaid chart (pie/bar)
+- **Key deliverables:** Top items produced that day
+- **Data accuracy:** All counts from scan, nothing estimated
+
+---
+
+## [3] Weekly Report Template
+
+### File: `Weekly_Report_YYYY-WNN.md`
+
+```markdown
+# 📅 WEEKLY WORK REPORT — {Year} Week {WeekNumber} ({StartDate} – {EndDate})
+
+**Cyborg ID:** {CyborgID}  
+**Workspace:** `C:\Aliens\`  
+**Week:** {Year}-W{WeekNumber} ({StartDate} to {EndDate})  
+**Working Days:** {WorkingDayCount}  
+
+---
+
+## 📊 WEEK SUMMARY
+
+| Metric | Value |
+|---|---|
+| **Working Days** | **{WorkingDayCount}** |
+| **Total Files** | **{TotalFiles}** |
+| **Total Size** | **{TotalSize}** |
+| **Projects Active** | **{ProjectCount}** |
+| **Avg Files/Day** | **{AvgFilesPerDay}** |
+| **Peak Day** | **{PeakDay}: {PeakFiles} files** |
+
+---
+
+## 📅 DAILY BREAKDOWN
+
+| Day | Date | Files | Size | Primary Work | Key Outcome |
+|---|---|---|---|---|---|
+| {DayName1} | {Date1} | {Files1} | {Size1} | {Work1} | {Outcome1} |
+| {DayName2} | {Date2} | {Files2} | {Size2} | {Work2} | {Outcome2} |
+| ... | ... | ... | ... | ... | ... |
+| **TOTAL** | | **{TotalFiles}** | **{TotalSize}** | | |
+
+```mermaid
+xychart-beta
+    title "Daily Files — Week {WeekNumber}"
+    x-axis [{DayLabels}]
+    y-axis "Files" 0 --> {MaxFiles}
+    bar [{FileCounts}]
+```
+
+---
+
+## 📊 WEEK HIGHLIGHTS
+
+### 🏆 Top Achievements
+1. {Achievement1}
+2. {Achievement2}
+3. {Achievement3}
+
+### 📈 Velocity Metrics
+
+| Metric | Value |
+|---|---|
+| Average Files/Day | {AvgFiles} |
+| Peak Day | {PeakDay} ({PeakFiles} files) |
+| Consistency | {StdDev} deviation |
+
+---
+
+## 🔗 DAILY REPORT LINKS
+
+| Date | Report |
+|---|---|
+| {Date1} | [Daily_Report_{Date1}.md](Daily_Report_{Date1}.md) |
+| {Date2} | [Daily_Report_{Date2}.md](Daily_Report_{Date2}.md) |
+
+---
+
+*Weekly report generated by Report workflow · Cyborg ID: {CyborgID}*
+```
+
+### Content Rules (Weekly)
+
+- Aggregates ALL daily data for the ISO week (Mon-Sun)
+- Daily breakdown table mandatory
+- At least 1 bar chart showing daily progression
+- Week-over-week comparison if previous week report exists
+- Links to individual daily reports
+- Velocity metrics (avg, peak, consistency)
+
+---
+
+## [4] Monthly Report Template
+
+### File: `Monthly_Report_YYYY-MM.md`
+
+```markdown
+# 📅 MONTHLY WORK REPORT — {MonthName} {Year}
+
+**Cyborg ID:** {CyborgID}  
+**Workspace:** `C:\Aliens\`  
+**Month:** {MonthName} {Year}  
+**Working Days:** {WorkingDayCount}  
+
+---
+
+## 📊 MONTH SUMMARY
+
+| Metric | Value |
+|---|---|
+| **Working Days** | **{WorkingDayCount}** |
+| **Total Files** | **{TotalFiles}** |
+| **Total Size** | **{TotalSize}** |
+| **Projects Active** | **{ProjectCount}** |
+| **Avg Files/Day** | **{AvgFilesPerDay}** |
+| **Peak Day** | **{PeakDate}: {PeakFiles} files** |
+| **Peak Week** | **W{PeakWeek}: {PeakWeekFiles} files** |
+
+---
+
+## 📅 ACTIVITY CALENDAR
+
+```
+ 📅 {MonthName} {Year}
+ ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┐
+ │ Sun │ Mon │ Tue │ Wed │ Thu │ Fri │ Sat │
+ ├─────┼─────┼─────┼─────┼─────┼─────┼─────┤
+ │ ... (calendar grid with ██ for working days)
+ └─────┴─────┴─────┴─────┴─────┴─────┴─────┘
+ ██ = Active Day ({WorkingDayCount} days)
+```
+
+---
+
+## 📅 WEEKLY BREAKDOWN
+
+| Week | Period | Days | Files | Size | Primary Work |
+|---|---|---|---|---|---|
+| W{Week1} | {Period1} | {Days1} | {Files1} | {Size1} | {Work1} |
+| W{Week2} | {Period2} | {Days2} | {Files2} | {Size2} | {Work2} |
+| **TOTAL** | | **{TotalDays}** | **{TotalFiles}** | **{TotalSize}** | |
+
+---
+
+## 📊 DAILY BREAKDOWN
+
+| # | Date | Day | Files | Size | Primary Work |
+|---|---|---|---|---|---|
+| 1 | {Date1} | {DayName1} | {Files1} | {Size1} | {Work1} |
+| ... | ... | ... | ... | ... | ... |
+
+```mermaid
+xychart-beta
+    title "Daily Files — {MonthName} {Year}"
+    x-axis [{DayLabels}]
+    y-axis "Files" 0 --> {MaxFiles}
+    bar [{FileCounts}]
+```
+
+---
+
+## 🔷 PROJECT PROGRESS
+
+### {Project1}
+| Metric | Value |
+|---|---|
+| Files | {ProjectFiles} |
+| Status | {ProjectStatus} |
+| Completion | {Completion}% |
+
+### {Project2}
+{...}
+
+---
+
+## 📊 MONTH HIGHLIGHTS
+
+### 🏆 Top Achievements
+1. {Achievement1}
+2. {Achievement2}
+
+### 🏆 Records
+| Record | Value | When |
+|---|---|---|
+| {Record1} | {Value1} | {Date1} |
+
+---
+
+## 📌 STRATEGIC INSIGHTS
+
+> **Insight 1:** {Strategic insight about trends}
+
+> **Insight 2:** {Strategic insight about velocity}
+
+---
+
+## 🔗 REPORT LINKS
+
+### Weekly Reports
+| Week | Report |
+|---|---|
+| W{Week1} | [Weekly_Report_{Year}-W{Week1}.md](Weekly_Report_{Year}-W{Week1}.md) |
+
+### Daily Reports
+| Date | Report |
+|---|---|
+| {Date1} | [Daily_Report_{Date1}.md](Daily_Report_{Date1}.md) |
+
+---
+
+*Monthly report generated by Report workflow · Cyborg ID: {CyborgID}*
+```
+
+### Content Rules (Monthly)
+
+- Aggregates all weekly + daily data for calendar month
+- Activity calendar (visual grid) mandatory
+- Weekly breakdown table mandatory
+- Project progress sections per active project
+- Month-over-month comparison if previous month exists
+- Strategic insights (not just raw numbers)
+- Links to weekly and daily reports
+
+---
+
+## [5] Yearly Report Template
+
+### File: `Yearly_Report_YYYY.md`
+
+```markdown
+# 📅 YEARLY WORK REPORT — {Year}
+
+**Cyborg ID:** {CyborgID}  
+**Workspace:** `C:\Aliens\`  
+**Year:** {Year}  
+**Working Months:** {WorkingMonthCount}  
+**Working Days:** {TotalWorkingDays}  
+
+---
+
+## 📊 YEAR SUMMARY
+
+{Executive summary with total files, size, projects, 
+ key milestones, overall velocity}
+
+---
+
+## 📅 MONTHLY BREAKDOWN
+
+| Month | Days | Files | Size | Projects | Key Milestone |
+|---|---|---|---|---|---|
+| {Month1} | {Days1} | {Files1} | {Size1} | {Projects1} | {Milestone1} |
+| ... | ... | ... | ... | ... | ... |
+| **TOTAL** | **{TotalDays}** | **{TotalFiles}** | **{TotalSize}** | | |
+
+```mermaid
+xychart-beta
+    title "Monthly Files — {Year}"
+    x-axis [{MonthLabels}]
+    y-axis "Files" 0 --> {MaxFiles}
+    bar [{FileCounts}]
+```
+
+---
+
+## 📊 QUARTERLY ANALYSIS
+
+| Quarter | Months | Days | Files | Size |
+|---|---|---|---|---|
+| Q1 (Jan-Mar) | {Q1Months} | {Q1Days} | {Q1Files} | {Q1Size} |
+| Q2 (Apr-Jun) | {Q2Months} | {Q2Days} | {Q2Files} | {Q2Size} |
+| Q3 (Jul-Sep) | {Q3Months} | {Q3Days} | {Q3Files} | {Q3Size} |
+| Q4 (Oct-Dec) | {Q4Months} | {Q4Days} | {Q4Files} | {Q4Size} |
+
+---
+
+## 🏗️ PROJECT PORTFOLIO
+
+| Project | Status | Files | Start | End/Ongoing | Completion |
+|---|---|---|---|---|---|
+| {Project1} | {Status1} | {Files1} | {Start1} | {End1} | {Pct1}% |
+
+```mermaid
+gantt
+    title {Year} — Project Timeline
+    dateFormat YYYY-MM-DD
+    {GanttEntries}
+```
+
+---
+
+## 🏆 YEAR HIGHLIGHTS & RECORDS
+
+| Record | Value | When |
+|---|---|---|
+| {Record1} | {Value1} | {Date1} |
+
+---
+
+## 📌 STRATEGIC INSIGHTS
+
+> **Insight 1:** {Yearly trend analysis}
+
+---
+
+## 🔗 REPORT LINKS
+
+### Monthly Reports
+| Month | Report |
+|---|---|
+| {Month1} | [Monthly_Report_{Year}-{MM}.md](Monthly_Report_{Year}-{MM}.md) |
+
+---
+
+*Yearly report generated by Report workflow · Cyborg ID: {CyborgID}*
+```
+
+---
+
+## [6] Dashboard Template
+
+### File: `Dashboard.md`
+
+Dashboard template follows the structure defined in the parent `Report.md` workflow — Section 5.5.
+
+Key rules:
+- Dashboard is ALWAYS fully regenerated (not incremental)
+- Contains 13+ sections covering entire history
+- All mermaid charts included
+- All report links indexed
+- Executive summary scoreboard
+- Grand totals (lifetime statistics)
+- Strategic insights
+
+### 6.1 ACC Planner Analytics Section (Dashboard-Mandatory)
+
+Dashboard me ek dedicated section MANDATORY hai jo `/Aliens/Project/` se planner data show kare:
+
+```markdown
+## 📋 ACC PLANNER STATUS
+
+### Planner Inventory
+
+| Planner | App | Stage | Total Rows | Pending | Completed | Failed | Completion |
+|---|---|---|---|---|---|---|---|
+| {PlannerFile} | {AppName} | {Stage|-} | {Total} | {Pending} | {Completed} | {Failed} | {Pct}% |
+| ... | ... | ... | ... | ... | ... | ... | ... |
+| **TOTAL** | | | **{GrandTotal}** | **{TotalPending}** | **{TotalCompleted}** | **{TotalFailed}** | **{OverallPct}%** |
+
+```mermaid
+pie title "ACC Planner Overall Status"
+    "Completed ({TotalCompleted})" : {TotalCompleted}
+    "Pending ({TotalPending})" : {TotalPending}
+    "Failed ({TotalFailed})" : {TotalFailed}
+```
+
+### Cyborg Assignment Breakdown
+
+| Cyborg ID | Assigned Planners | Total Tasks | Pending | Completed | Failed |
+|---|---|---|---|---|---|
+| {CyborgID} | {PlannerCount} | {TaskCount} | {Pending} | {Completed} | {Failed} |
+
+### Missing Planners
+
+| App Name | Evidence | Action |
+|---|---|---|
+| {AppName} | Files found in {Folder}/ | Planner creation recommended |
+
+### Delivery Verification
+
+| Metric | Count |
+|---|---|
+| Planner rows marked complete | {CompletedRows} |
+| Verified on disk | {VerifiedCount} |
+| Gaps (marked done but file missing) | {GapCount} |
+```
+
+Yeh section Monthly aur Yearly reports me bhi include hona chahiye (as a summary snapshot at that point in time).
+
+---
+
+## [7] Project-Level Report Generation (ACC Planner-Based)
+
+### 7.1 Process
+
+```
+"Project" = ACC Planner CSV in /Aliens/Project/ALL/
+"Project" ≠ code domain folders (WebOS, WebSDK, WebApp, etc.)
+
+For each AppName discovered from planner CSVs:
+
+1. Read planner CSV from /Aliens/Project/ALL/{AppName}_Planner*.csv
+2. Parse rows: total, pending (status=0), completed (status=1), failed (status=2)
+3. If multi-stage (STAGE_1, STAGE_2, etc.): per-stage breakdown
+4. Parse assign column: Cyborg assignment summary per AppName
+5. Cross-reference code_path column: delivery verification (file exists on disk?)
+6. Generate Dashboard.md with:
+   - Planner inventory (filename, stage, row counts, completion %)
+   - Status breakdown (pending/completed/failed)
+   - Cyborg assignment summary
+   - Delivery verification metrics
+   - Mermaid chart (pie: completion status)
+7. Save to /Aliens/Report/Project/{AppName}/Dashboard.md
+
+FORBIDDEN:
+- Code domain folders ko "projects" samajh ke per-domain reports banana
+- Daily/Weekly/Monthly/Yearly reports at project level (sirf Dashboard)
+- Folder activity file counts ko project reports me use karna
+```
+
+### 7.2 Project Dashboard Content
+
+Project Dashboard template:
+
+```markdown
+# 📊 ACC PLANNER DASHBOARD — {AppName}
+
+**App/Engine:** {AppName}
+**Planner Source:** `/Aliens/Project/ALL/`
+**Generated:** {Timestamp}
+
+---
+
+## 📝 Planner Inventory
+
+| Planner File | Stage | Total Rows | Pending | Completed | Failed | Completion |
+|---|---|---|---|---|---|---|
+| {FileName} | {Stage|-} | {Total} | {Pending} | {Completed} | {Failed} | {Pct}% |
+| **TOTAL** | | **{GrandTotal}** | **{TotalPending}** | **{TotalCompleted}** | **{TotalFailed}** | **{OverallPct}%** |
+
+## 📊 Status Overview
+
+{mermaid pie chart: Completed/Pending/Failed}
+
+## 🤖 Cyborg Assignments
+
+| Cyborg ID | Tasks | Pending | Completed | Failed |
+|---|---|---|---|---|
+| {CyborgID} | {Count} | {Pending} | {Completed} | {Failed} |
+
+## ✅ Delivery Verification
+
+| Metric | Count |
+|---|---|
+| Rows marked complete | {CompletedRows} |
+| Verified on disk | {VerifiedCount} |
+| Gaps (done but file missing) | {GapCount} |
+
+---
+
+*Generated by Report workflow · Source: ACC Planner System*
+```
+
+---
+
+## [8] Content Generation Rules (All Report Types)
+
+### 8.1 Data Integrity
+
+- Every number comes from filesystem scan (never estimated/guessed)
+- Day names verified via `(Get-Date).DayOfWeek`  
+- File sizes from actual `$_.Length`
+- Counts from actual `Group-Object` results
+
+### 8.2 Writing Style
+
+- Clean, scannable markdown
+- Tables for structured data (aligned columns)
+- Mermaid charts for visual patterns (minimum 1 per report)
+- Emoji section headers for quick navigation
+- ASCII art scoreboard for executive summaries
+- Hinglish/English interchangeable based on manifest language preference
+
+### 8.3 Cross-References
+
+- Daily reports link to their weekly/monthly parent
+- Weekly reports link to daily children + monthly parent
+- Monthly reports link to weekly children + yearly parent
+- Dashboard links to ALL reports
+
+### 8.4 No Overlap with Other Cyborgs
+
+```
+HARD RULE:
+- Only files with CreationTime on this workspace (C:\Aliens\) count
+- Since filesystem scan is local, this is automatic
+- But: if working on shared repositories, the report must note:
+  "These files were created on Cyborg {CyborgID}"
+```
+
+---
+
+## [9] File Naming Conventions (STRICT)
+
+| Report Type | Cyborg-Level Filename | Project-Level Filename |
+|:---|:---|:---|
+| Daily | `Daily_Report_YYYY-MM-DD.md` | N/A (no Daily at project level) |
+| Weekly | `Weekly_Report_YYYY-WNN.md` | N/A (no Weekly at project level) |
+| Monthly | `Monthly_Report_YYYY-MM.md` | N/A (no Monthly at project level) |
+| Yearly | `Yearly_Report_YYYY.md` | N/A (no Yearly at project level) |
+| Dashboard | `Dashboard.md` | `Dashboard.md` (in `/Report/Project/{AppName}/`) |
+
+- `NN` in weekly = 2-digit ISO week number (01-53)
+- `MM` in monthly = 2-digit month (01-12)
+- Project-level reports sirf Dashboard hain — Daily/Weekly/Monthly/Yearly project level par generate NAHI hote
+
+---
+
+## [10] Update vs Create Policy
+
+```
+Daily:
+  - If file missing → CREATE (fresh report)
+  - If file exists AND same date as today → UPDATE (re-scan + merge latest data)
+    → Full re-scan karo, naya data purane ke saath merge karo
+    → Report me "Last Updated: {timestamp}" field update karo
+    → Puraana data delete nahi — naye files/data ADD hote hain
+  - If file exists AND date is in the past → SKIP (historical report locked)
+  - Exception: Description me "regenerate" likha ho → overwrite (any date)
+
+Weekly:
+  - If file missing → CREATE
+  - If file exists AND current week still active → UPDATE (re-aggregate from daily reports)
+  - If file exists AND week is completed (past) → SKIP
+  - Exception: Description me "regenerate" → overwrite
+
+Monthly:
+  - If file missing → CREATE
+  - If file exists AND current month still active → UPDATE (re-aggregate from weekly/daily)
+  - If file exists AND month is completed (past) → SKIP
+  - Exception: Description me "regenerate" → overwrite
+
+Yearly:
+  - If file missing → CREATE
+  - If file exists AND current year still active → UPDATE (re-aggregate from monthly)
+  - If file exists AND year is completed (past) → SKIP
+  - Exception: Description me "regenerate" → overwrite
+
+Dashboard:
+  - ALWAYS regenerate (overwrite existing)
+  - Dashboard reflects latest complete picture at run time
+```
+
+### Update Merge Rules (IMPORTANT)
+
+```
+Jab existing report UPDATE hoti hai (same active period):
+
+1. Fresh filesystem scan karo (latest data)
+2. Puraani report ka data REPLACE hota hai naye scan se (not appended)
+   → Kyunki scan hi SSOT hai — jo disk par hai wahi sach hai
+3. "Last Updated" timestamp update karo
+4. Mermaid charts re-generate with latest numbers
+5. Summary tables recalculate with full period data
+
+Example:
+  - Noon run: Daily report shows 50 files created today
+  - Raat run: Re-scan finds 120 files created today (50 + 70 naye)
+  - Updated report shows 120 files (full day snapshot, not 50+70 separately)
+```
+
+---
+
+## [11] Changelog
+
+- 26.00.02 (2026-03-12): **MAJOR FIX** — Project-Level Report Generation (Section 7) completely rewritten. "Project" = ACC Planner CSV, NOT code domain folders. Phase 6 updated from domain-based reports to planner-based Dashboards only. Section 9 naming updated (no Daily/Weekly/Monthly/Yearly at project level). Project Dashboard template added with planner inventory, status overview, Cyborg assignments, and delivery verification.
+- 26.00.01 (2026-03-12): Fixed Project folder understanding — added ACC Planner Analytics section (6.1) to Dashboard template, clarified Project-Level Report Generation note (Section 7.1) that `/Aliens/Project/` is NOT a code project.
+- 26.00.00 (2026-03-12): Initial version — templates for all 5 report types, project-level generation, content rules, naming conventions.

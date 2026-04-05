@@ -1,0 +1,1615 @@
+{
+  "RefId": "ACC.Workflows.Index",
+  "Type": "RegistryIndex",
+  "Status": "Stable",
+  "Version": "26.00.00",
+  "LastUpdated": "2026-02-27",
+  "PathPrefix": "Workflows/ACC/",
+  "Folders": {
+    "Common": "Workflows/ACC/_Common/",
+    "Refs": "Workflows/ACC/_Refs/",
+    "Domains": {
+      "WebSDK": "Workflows/ACC/WebSDK/",
+      "WebApps": "Workflows/ACC/WebApp/",
+      "WebOS": "Workflows/ACC/WebOS/",
+
+      "PyOS": "Workflows/ACC/PyOS/",
+      "PyApp": "Workflows/ACC/PyApp/",
+      "PySDK": "Workflows/ACC/PySDK/",
+      "PyBrand": "Workflows/ACC/PyBrand/",
+
+      "DartOS": "Workflows/ACC/DartOS/",
+      "DartApp": "Workflows/ACC/DartApp/",
+      "DartSDK": "Workflows/ACC/DartSDK/",
+      "DartBrand": "Workflows/ACC/DartBrand/",
+
+      "SharpOS": "Workflows/ACC/SharpOS/",
+      "SharpApp": "Workflows/ACC/SharpApp/",
+      "SharpSDK": "Workflows/ACC/SharpSDK/",
+      "SharpBrand": "Workflows/ACC/SharpBrand/",
+
+      "Wiki": "Workflows/ACC/Wiki/",
+      "Wikipedia": "Workflows/ACC/Wikipedia/",
+      "Blog": "Workflows/ACC/Blog/",
+      "Blogs": "Workflows/ACC/Blogs/",
+      "Skill": "Workflows/ACC/Skill/",
+      "Role": "Workflows/ACC/Role/",
+      "Course": "Workflows/ACC/Course/",
+      "ACLE": "Workflows/ACC/ACLE/",
+      "Git": "Workflows/ACC/Git/"
+    },
+    "LegacyDomains": {
+      "WebOS": "Workflows/ACC/WebOS.OLD/",
+      "WebApp": "Workflows/ACC/WebApp.OLD/",
+      "WebBrand": "Workflows/ACC/WebBrand.OLD/"
+    }
+  },
+  "CommonFiles": [
+        "Workflows/ACC/_Common/Workflow_Plural.md",
+        "Workflows/ACC/_Common/Workflow_Singular.md",
+        "Workflows/ACC/_Common/Workflow_Singular-Planning.md",
+        "Workflows/ACC/_Common/Workflow_Singular-Code.md",
+        "Workflows/ACC/_Common/Workflow_Singular-Documentation.md"
+      ],
+      "RefFiles": [
+        "Workflows/ACC/_Refs/ACC.Targets.md",
+        "Workflows/ACC/_Refs/ACC.Paths.md",
+        "Workflows/ACC/_Refs/ACC.Output.md",
+        "Workflows/ACC/_Refs/ACC.Safety.md",
+        "Workflows/ACC/_Refs/ACC.Memory.md",
+        "Workflows/ACC/_Refs/ACC.Manifest.md",
+        "Workflows/ACC/_Refs/ACC.Errors.md",
+        "Workflows/ACC/_Refs/ACC.UI.Premium.md",
+        "Workflows/ACC/_Refs/WebOS_Engines.md",
+        "Workflows/ACC/_Refs/WebOS_System.md",
+        "Workflows/ACC/_Refs/WebSDK.md",
+        "Workflows/ACC/_Refs/ACC.Workflows.Index.md",
+        "Workflows/ACC/_Refs/ACC.Workflows.Index.json",
+        "Workflows/ACC/_Refs/WebApp_Naming_and_Screens.md"
+      ],
+      "ExecutionDefaults": {
+        "ChildOrder": [
+          "Planning",
+          "Code",
+          "Documentation"
+        ],
+        "NoDelete": true,
+        "DefaultTheme": "_Basic",
+        "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)",
+        "Approval": "manifest + ACC.Safety",
+        "RunRecordsRoot": "/Aliens/.Alien/{Developer_Username}/Runs/",
+        "PlanningRoot": "/Aliens/.Alien/{Developer_Username}/Planning/",
+        "DocsRoot": "/Aliens/Docs/"
+      },
+      "Registry": {
+        "Meta": {
+          "WorkflowId": "Meta",
+          "Domain": "Common",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/_Common/Meta.md",
+            "Planning": "Workflows/ACC/_Common/Meta-Planning.md",
+            "Code": "Workflows/ACC/_Common/Meta-Code.md",
+            "Documentation": "Workflows/ACC/_Common/Meta-Documentation.md"
+          },
+          "Children": [
+            "Meta-Planning",
+            "Meta-Code",
+            "Meta-Documentation"
+          ],
+          "TargetExamples": [
+            "(empty)"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "Docs": {
+          "WorkflowId": "Docs",
+          "Domain": "Common",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/_Common/Docs.md",
+            "Planning": "Workflows/ACC/_Common/Docs-Planning.md",
+            "Code": "Workflows/ACC/_Common/Docs-Code.md",
+            "Documentation": "Workflows/ACC/_Common/Docs-Documentation.md"
+          },
+          "Children": [
+            "Docs-Planning",
+            "Docs-Code",
+            "Docs-Documentation"
+          ],
+          "TargetExamples": [
+            "B-Commerce/README"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "Workflows": {
+          "WorkflowId": "Workflows",
+          "Domain": "Common",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/_Common/Workflows.md"
+          },
+          "Children": [],
+          "TargetExamples": [
+            "Tasks.csv"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "Doctor": {
+          "WorkflowId": "Doctor",
+          "Domain": "Common",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/_Common/Doctor.md",
+            "Planning": "Workflows/ACC/_Common/Doctor-Planning.md",
+            "Code": "Workflows/ACC/_Common/Doctor-Code.md",
+            "Documentation": "Workflows/ACC/_Common/Doctor-Documentation.md"
+          },
+          "Children": [
+            "Doctor-Audit",
+            "Doctor-Planning",
+            "Doctor-Code",
+            "Doctor-Documentation"
+          ],
+          "TargetExamples": [
+            "Auto"
+          ],
+          "Flags": {
+            "IsUpdate": true,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "modify-only (mechanical safe patches only)",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "Memory-Read": {
+          "WorkflowId": "Memory-Read",
+          "Domain": "Common",
+          "Type": "Workflow_Singular",
+          "Files": {
+            "Singular": "Workflows/ACC/Memory/Memory-Read.md"
+          },
+          "Children": [],
+          "TargetExamples": [
+            "Global.Governance",
+            "WebApp.Exchange"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "read-only",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "Memory-Write": {
+          "WorkflowId": "Memory-Write",
+          "Domain": "Common",
+          "Type": "Workflow_Singular-Documentation",
+          "Files": {
+            "Singular": "Workflows/ACC/Memory/Memory-Write.md"
+          },
+          "Children": [],
+          "TargetExamples": [
+            "Global.Governance",
+            "WebApp.Exchange"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "Memory-Index": {
+          "WorkflowId": "Memory-Index",
+          "Domain": "Common",
+          "Type": "Workflow_Singular-Documentation",
+          "Files": {
+            "Singular": "Workflows/ACC/Memory/Memory-Index.md"
+          },
+          "Children": [],
+          "TargetExamples": [
+            "Global.Governance",
+            "WebApp.Exchange"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "Memory-Prune": {
+          "WorkflowId": "Memory-Prune",
+          "Domain": "Common",
+          "Type": "Workflow_Singular-Documentation",
+          "Files": {
+            "Singular": "Workflows/ACC/Memory/Memory-Prune.md"
+          },
+          "Children": [],
+          "TargetExamples": [
+            "Global.Governance",
+            "WebApp.Exchange"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "archive (no delete)",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebSDK_Module": {
+          "WorkflowId": "WebSDK_Module",
+          "Domain": "WebSDK",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebSDK/WebSDK_Module.md"
+          },
+          "Children": [],
+          "TargetExamples": [
+            "User, Account"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebSDK_Module_Class": {
+          "WorkflowId": "WebSDK_Module_Class",
+          "Domain": "WebSDK",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_Class.md",
+            "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_Class-Planning.md",
+            "Code": "Workflows/ACC/WebSDK/WebSDK_Module_Class-Code.md",
+            "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_Class-Documentation.md"
+          },
+          "Children": [
+            "WebSDK_Module_Class-Planning",
+            "WebSDK_Module_Class-Code",
+            "WebSDK_Module_Class-Documentation"
+          ],
+          "TargetExamples": [
+            "User, Account"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebSDK_Module_Class_Update": {
+          "WorkflowId": "WebSDK_Module_Class_Update",
+          "Domain": "WebSDK",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_Class_Update.md",
+            "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_Class_Update-Planning.md",
+            "Code": "Workflows/ACC/WebSDK/WebSDK_Module_Class_Update-Code.md",
+            "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_Class_Update-Documentation.md"
+          },
+          "Children": [
+            "WebSDK_Module_Class_Update-Planning",
+            "WebSDK_Module_Class_Update-Code",
+            "WebSDK_Module_Class_Update-Documentation"
+          ],
+          "TargetExamples": [
+            "User, Account"
+          ],
+          "Flags": {
+            "IsUpdate": true,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "modify-only; missing target => error",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebSDK_Module_API": {
+          "WorkflowId": "WebSDK_Module_API",
+          "Domain": "WebSDK",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_API.md",
+            "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_API-Planning.md",
+            "Code": "Workflows/ACC/WebSDK/WebSDK_Module_API-Code.md",
+            "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_API-Documentation.md"
+          },
+          "Children": [
+            "WebSDK_Module_API-Planning",
+            "WebSDK_Module_API-Code",
+            "WebSDK_Module_API-Documentation"
+          ],
+          "TargetExamples": [
+            "User/UserNew, Account/AccountUpdate"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebSDK_Module_API_Update": {
+          "WorkflowId": "WebSDK_Module_API_Update",
+          "Domain": "WebSDK",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_API_Update.md",
+            "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_API_Update-Planning.md",
+            "Code": "Workflows/ACC/WebSDK/WebSDK_Module_API_Update-Code.md",
+            "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_API_Update-Doc.md"
+          },
+          "Children": [
+            "WebSDK_Module_API_Update-Planning",
+            "WebSDK_Module_API_Update-Code",
+            "WebSDK_Module_API_Update-Doc"
+          ],
+          "TargetExamples": [
+            "User/UserNew, Account/AccountUpdate"
+          ],
+          "Flags": {
+            "IsUpdate": true,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "modify-only; missing target => error",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebSDK_Module_SQL": {
+          "WorkflowId": "WebSDK_Module_SQL",
+          "Domain": "WebSDK",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_SQL.md",
+            "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_SQL-Planning.md",
+            "Code": "Workflows/ACC/WebSDK/WebSDK_Module_SQL-Code.md",
+            "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_SQL-Documentation.md"
+          },
+          "Children": [
+            "WebSDK_Module_SQL-Planning",
+            "WebSDK_Module_SQL-Code",
+            "WebSDK_Module_SQL-Documentation"
+          ],
+          "TargetExamples": [
+            "Product"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebSDK_Module_Cron": {
+          "WorkflowId": "WebSDK_Module_Cron",
+          "Domain": "WebSDK",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_Cron.md",
+            "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_Cron-Planning.md",
+            "Code": "Workflows/ACC/WebSDK/WebSDK_Module_Cron-Code.md",
+            "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_Cron-Documentation.md"
+          },
+          "Children": [
+            "WebSDK_Module_Cron-Planning",
+            "WebSDK_Module_Cron-Code",
+            "WebSDK_Module_Cron-Documentation"
+          ],
+          "TargetExamples": [
+            "Product, Product/Product_OrdersPayment"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebSDK_Module_Webhook": {
+          "WorkflowId": "WebSDK_Module_Webhook",
+          "Domain": "WebSDK",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_Webhook.md",
+            "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_Webhook-Planning.md",
+            "Code": "Workflows/ACC/WebSDK/WebSDK_Module_Webhook-Code.md",
+            "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_Webhook-Documentation.md"
+          },
+          "Children": [
+            "WebSDK_Module_Webhook-Planning",
+            "WebSDK_Module_Webhook-Code",
+            "WebSDK_Module_Webhook-Documentation"
+          ],
+          "TargetExamples": [
+            "Product, Product/ProductStatus"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebSDK_Module_Component": {
+          "WorkflowId": "WebSDK_Module_Component",
+          "Domain": "WebSDK",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_Component.md",
+            "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_Component-Planning.md",
+            "Code": "Workflows/ACC/WebSDK/WebSDK_Module_Component-Code.md",
+            "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_Component-Documentation.md"
+          },
+          "Children": [
+            "WebSDK_Module_Component-Planning",
+            "WebSDK_Module_Component-Code",
+            "WebSDK_Module_Component-Documentation"
+          ],
+          "TargetExamples": [
+            "Product, Product/Product_MoneyCard"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebSDK_Module_Screen": {
+          "WorkflowId": "WebSDK_Module_Screen",
+          "Domain": "WebSDK",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_Screen.md",
+            "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_Screen-Planning.md",
+            "Code": "Workflows/ACC/WebSDK/WebSDK_Module_Screen-Code.md",
+            "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_Screen-Documentation.md"
+          },
+          "Children": [
+            "WebSDK_Module_Screen-Planning",
+            "WebSDK_Module_Screen-Code",
+            "WebSDK_Module_Screen-Documentation"
+          ],
+          "TargetExamples": [
+            "Product, Product/Product_Orders"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebSDK_Module_JS": {
+          "WorkflowId": "WebSDK_Module_JS",
+          "Domain": "WebSDK",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_JS.md",
+            "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_JS-Planning.md",
+            "Code": "Workflows/ACC/WebSDK/WebSDK_Module_JS-Code.md",
+            "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_JS-Documentation.md"
+          },
+          "Children": [
+            "WebSDK_Module_JS-Planning",
+            "WebSDK_Module_JS-Code",
+            "WebSDK_Module_JS-Documentation"
+          ],
+          "TargetExamples": [
+            "Teacher, Product"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebApp_Component": {
+          "WorkflowId": "WebApp_Component",
+          "Domain": "WebApps",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebApp/WebApp_Component.md",
+            "Planning": "Workflows/ACC/WebApp/WebApp_Component-Planning.md",
+            "Code": "Workflows/ACC/WebApp/WebApp_Component-Code.md",
+            "Documentation": "Workflows/ACC/WebApp/WebApp_Component-Documentation.md"
+          },
+          "Children": [
+            "WebApp_Component-Planning",
+            "WebApp_Component-Code",
+            "WebApp_Component-Documentation"
+          ],
+          "TargetExamples": [
+            "AlienCyborg/AlienCyborg_DepositNew, Social/Social_Post"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebApp_Component_Update": {
+          "WorkflowId": "WebApp_Component_Update",
+          "Domain": "WebApps",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebApp/WebApp_Component_Update.md",
+            "Planning": "Workflows/ACC/WebApp/WebApp_Component_Update-Planning.md",
+            "Code": "Workflows/ACC/WebApp/WebApp_Component_Update-Code.md",
+            "Documentation": "Workflows/ACC/WebApp/WebApp_Component_Update-Documentation.md"
+          },
+          "Children": [
+            "WebApp_Component_Update-Planning",
+            "WebApp_Component_Update-Code",
+            "WebApp_Component_Update-Documentation"
+          ],
+          "TargetExamples": [
+            "AlienCyborg/DepositNew, Social/Post"
+          ],
+          "Flags": {
+            "IsUpdate": true,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "modify-only; missing target => error",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebApp_CSS": {
+          "WorkflowId": "WebApp_CSS",
+          "Domain": "WebApps",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebApp/WebApp_CSS.md",
+            "Planning": "Workflows/ACC/WebApp/WebApp_CSS-Planning.md",
+            "Code": "Workflows/ACC/WebApp/WebApp_CSS-Code.md",
+            "Documentation": "Workflows/ACC/WebApp/WebApp_CSS-Documentation.md"
+          },
+          "Children": [
+            "WebApp_CSS-Planning",
+            "WebApp_CSS-Code",
+            "WebApp_CSS-Documentation"
+          ],
+          "TargetExamples": [
+            "E-Commerce, Trip"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebApp_CSS_Update": {
+          "WorkflowId": "WebApp_CSS_Update",
+          "Domain": "WebApps",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebApp/WebApp_CSS_Update.md",
+            "Planning": "Workflows/ACC/WebApp/WebApp_CSS_Update-Planning.md",
+            "Code": "Workflows/ACC/WebApp/WebApp_CSS_Update-Code.md",
+            "Documentation": "Workflows/ACC/WebApp/WebApp_CSS_Update-Documentation.md"
+          },
+          "Children": [
+            "WebApp_CSS_Update-Planning",
+            "WebApp_CSS_Update-Code",
+            "WebApp_CSS_Update-Documentation"
+          ],
+          "TargetExamples": [
+            "Trip"
+          ],
+          "Flags": {
+            "IsUpdate": true,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "modify-only; missing target => error",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebApp_Section": {
+          "WorkflowId": "WebApp_Section",
+          "Domain": "WebApps",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebApp/WebApp_Section.md",
+            "Planning": "Workflows/ACC/WebApp/WebApp_Section-Planning.md",
+            "Code": "Workflows/ACC/WebApp/WebApp_Section-Code.md",
+            "Documentation": "Workflows/ACC/WebApp/WebApp_Section-Documentation.md"
+          },
+          "Children": [
+            "WebApp_Section-Planning",
+            "WebApp_Section-Code",
+            "WebApp_Section-Documentation"
+          ],
+          "TargetExamples": [
+            "AlienCyborg/Deposit_Header, AlienCyborg/Home_Hero"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebApp_Structure": {
+          "WorkflowId": "WebApp_Structure",
+          "Domain": "WebApps",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebApp/WebApp_Structure.md",
+            "Planning": "Workflows/ACC/WebApp/WebApp_Structure-Planning.md",
+            "Code": "Workflows/ACC/WebApp/WebApp_Structure-Code.md",
+            "Documentation": "Workflows/ACC/WebApp/WebApp_Structure-Documentation.md"
+          },
+          "Children": [
+            "WebApp_Structure-Planning",
+            "WebApp_Structure-Code",
+            "WebApp_Structure-Documentation"
+          ],
+          "TargetExamples": [
+            "B-Commerce"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebApp_Structure_Update": {
+          "WorkflowId": "WebApp_Structure_Update",
+          "Domain": "WebApps",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebApp/WebApp_Structure_Update.md",
+            "Planning": "Workflows/ACC/WebApp/WebApp_Structure_Update-Planning.md",
+            "Code": "Workflows/ACC/WebApp/WebApp_Structure_Update-Code.md",
+            "Documentation": "Workflows/ACC/WebApp/WebApp_Structure_Update-Documentation.md"
+          },
+          "Children": [
+            "WebApp_Structure_Update-Planning",
+            "WebApp_Structure_Update-Code",
+            "WebApp_Structure_Update-Documentation"
+          ],
+          "TargetExamples": [
+            "B-Commerce"
+          ],
+          "Flags": {
+            "IsUpdate": true,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "modify-only; missing target => error",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebApp_Layout": {
+          "WorkflowId": "WebApp_Layout",
+          "Domain": "WebApps",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebApp/WebApp_Layout.md",
+            "Planning": "Workflows/ACC/WebApp/WebApp_Layout-Planning.md",
+            "Code": "Workflows/ACC/WebApp/WebApp_Layout-Code.md",
+            "Documentation": "Workflows/ACC/WebApp/WebApp_Layout-Documentation.md"
+          },
+          "Children": [
+            "WebApp_Layout-Planning",
+            "WebApp_Layout-Code",
+            "WebApp_Layout-Documentation"
+          ],
+          "TargetExamples": [
+            "AlienCyborg/Header, AlienCyborg/Footer"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebApp_Section_Update": {
+          "WorkflowId": "WebApp_Section_Update",
+          "Domain": "WebApps",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebApp/WebApp_Section_Update.md",
+            "Planning": "Workflows/ACC/WebApp/WebApp_Section_Update-Planning.md",
+            "Code": "Workflows/ACC/WebApp/WebApp_Section_Update-Code.md",
+            "Documentation": "Workflows/ACC/WebApp/WebApp_Section_Update-Documentation.md"
+          },
+          "Children": [
+            "WebApp_Section_Update-Planning",
+            "WebApp_Section_Update-Code",
+            "WebApp_Section_Update-Documentation"
+          ],
+          "TargetExamples": [
+            "AlienCyborg/Deposit_Header, AlienCyborg/Home_Hero"
+          ],
+          "Flags": {
+            "IsUpdate": true,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "modify-only; missing target => error",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebApp_Screen": {
+          "WorkflowId": "WebApp_Screen",
+          "Domain": "WebApps",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebApp/WebApp_Screen.md",
+            "Planning": "Workflows/ACC/WebApp/WebApp_Screen-Planning.md",
+            "Code": "Workflows/ACC/WebApp/WebApp_Screen-Code.md",
+            "Documentation": "Workflows/ACC/WebApp/WebApp_Screen-Documentation.md"
+          },
+          "Children": [
+            "WebApp_Screen-Planning",
+            "WebApp_Screen-Code",
+            "WebApp_Screen-Documentation"
+          ],
+          "TargetExamples": [
+            "AlienCyborg/Deposit, AlienCyborg/Home"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebApp_Screen_Update": {
+          "WorkflowId": "WebApp_Screen_Update",
+          "Domain": "WebApps",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebApp/WebApp_Screen_Update.md",
+            "Planning": "Workflows/ACC/WebApp/WebApp_Screen_Update-Planning.md",
+            "Code": "Workflows/ACC/WebApp/WebApp_Screen_Update-Code.md",
+            "Documentation": "Workflows/ACC/WebApp/WebApp_Screen_Update-Documentation.md"
+          },
+          "Children": [
+            "WebApp_Screen_Update-Planning",
+            "WebApp_Screen_Update-Code",
+            "WebApp_Screen_Update-Documentation"
+          ],
+          "TargetExamples": [
+            "AlienCyborg/Deposit, AlienCyborg/Home"
+          ],
+          "Flags": {
+            "IsUpdate": true,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "modify-only; missing target => error",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebOS_Engine_PHP": {
+          "WorkflowId": "WebOS_Engine_PHP",
+          "Domain": "WebOS",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebOS/WebOS_Engine_PHP.md",
+            "Planning": "Workflows/ACC/WebOS/WebOS_Engine_PHP-Planning.md",
+            "Code": "Workflows/ACC/WebOS/WebOS_Engine_PHP-Code.md",
+            "Documentation": "Workflows/ACC/WebOS/WebOS_Engine_PHP-Documentation.md"
+          },
+          "Children": [
+            "WebOS_Engine_PHP-Planning",
+            "WebOS_Engine_PHP-Code",
+            "WebOS_Engine_PHP-Documentation"
+          ],
+          "TargetExamples": [
+            "WebOS.Cache, WebOS.Auth"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebOS_Engine_JS": {
+          "WorkflowId": "WebOS_Engine_JS",
+          "Domain": "WebOS",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebOS/WebOS_Engine_JS.md",
+            "Planning": "Workflows/ACC/WebOS/WebOS_Engine_JS-Planning.md",
+            "Code": "Workflows/ACC/WebOS/WebOS_Engine_JS-Code.md",
+            "Documentation": "Workflows/ACC/WebOS/WebOS_Engine_JS-Documentation.md"
+          },
+          "Children": [
+            "WebOS_Engine_JS-Planning",
+            "WebOS_Engine_JS-Code",
+            "WebOS_Engine_JS-Documentation"
+          ],
+          "TargetExamples": [
+            "WebOS.Cache, WebOS.Auth"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebOS_Engine_SQL": {
+          "WorkflowId": "WebOS_Engine_SQL",
+          "Domain": "WebOS",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebOS/WebOS_Engine_SQL.md",
+            "Planning": "Workflows/ACC/WebOS/WebOS_Engine_SQL-Planning.md",
+            "Code": "Workflows/ACC/WebOS/WebOS_Engine_SQL-Code.md",
+            "Documentation": "Workflows/ACC/WebOS/WebOS_Engine_SQL-Documentation.md"
+          },
+          "Children": [
+            "WebOS_Engine_SQL-Planning",
+            "WebOS_Engine_SQL-Code",
+            "WebOS_Engine_SQL-Documentation"
+          ],
+          "TargetExamples": [
+            "WebOS.Cache, WebOS.Auth"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "WebOS_Engine_Bash": {
+          "WorkflowId": "WebOS_Engine_Bash",
+          "Domain": "WebOS",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/WebOS/WebOS_Engine_Bash.md",
+            "Planning": "Workflows/ACC/WebOS/WebOS_Engine_Bash-Planning.md",
+            "Code": "Workflows/ACC/WebOS/WebOS_Engine_Bash-Code.md",
+            "Documentation": "Workflows/ACC/WebOS/WebOS_Engine_Bash-Documentation.md"
+          },
+          "Children": [
+            "WebOS_Engine_Bash-Planning",
+            "WebOS_Engine_Bash-Code",
+            "WebOS_Engine_Bash-Documentation"
+          ],
+          "TargetExamples": [
+            "WebOS.Cache, WebOS.Auth"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "Wiki_HIEN": {
+          "WorkflowId": "Wiki_HIEN",
+          "Domain": "Wiki",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/Wiki/Wiki_HIEN.md",
+            "Planning": "Workflows/ACC/Wiki/Wiki_HIEN-Planning.md",
+            "Documentation": "Workflows/ACC/Wiki/Wiki_HIEN-Documentation.md"
+          },
+          "Children": [
+            "Wiki_HIEN-Planning",
+            "Wiki_HIEN-Documentation"
+          ],
+          "TargetExamples": [
+            "Browser",
+            "Articles.csv"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "Wiki_ACLE": {
+          "WorkflowId": "Wiki_ACLE",
+          "Domain": "Wiki",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/Wiki/Wiki_ACLE.md",
+            "Planning": "Workflows/ACC/Wiki/Wiki_ACLE-Planning.md",
+            "Code": "Workflows/ACC/Wiki/Wiki_ACLE-Code.md",
+            "Documentation": "Workflows/ACC/Wiki/Wiki_ACLE-Documentation.md"
+          },
+          "Children": [
+            "Wiki_ACLE-Planning",
+            "Wiki_ACLE-Code",
+            "Wiki_ACLE-Documentation"
+          ],
+          "TargetExamples": [
+            "HIEN/A/Algorithm",
+            "HIEN.csv"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "Skill_ACLE": {
+          "WorkflowId": "Skill_ACLE",
+          "Domain": "Skill",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/Skill/Skill_ACLE.md",
+            "Planning": "Workflows/ACC/Skill/Skill_ACLE-Planning.md",
+            "Code": "Workflows/ACC/Skill/Skill_ACLE-Code.md",
+            "Documentation": "Workflows/ACC/Skill/Skill_ACLE-Documentation.md"
+          },
+          "Children": [
+            "Skill_ACLE-Planning",
+            "Skill_ACLE-Code",
+            "Skill_ACLE-Documentation"
+          ],
+          "TargetExamples": [
+            "HIEN/Python/01_Python_Introduction",
+            "HIEN.csv"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "Wikipedia_ACLE": {
+          "WorkflowId": "Wikipedia_ACLE",
+          "Domain": "Wikipedia",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/Wikipedia/Wikipedia_ACLE.md",
+            "Planning": "Workflows/ACC/Wikipedia/Wikipedia_ACLE-Planning.md",
+            "Code": "Workflows/ACC/Wikipedia/Wikipedia_ACLE-Code.md",
+            "Documentation": "Workflows/ACC/Wikipedia/Wikipedia_ACLE-Documentation.md"
+          },
+          "Children": [
+            "Wikipedia_ACLE-Planning",
+            "Wikipedia_ACLE-Code",
+            "Wikipedia_ACLE-Documentation"
+          ],
+          "TargetExamples": [
+            "HIEN/A0001/Albert_Einstein",
+            "HIEN.csv"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "Blogs_ACLE": {
+          "WorkflowId": "Blogs_ACLE",
+          "Domain": "Blogs",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/Blogs/Blogs_ACLE.md",
+            "Planning": "Workflows/ACC/Blogs/Blogs_ACLE-Planning.md",
+            "Code": "Workflows/ACC/Blogs/Blogs_ACLE-Code.md",
+            "Documentation": "Workflows/ACC/Blogs/Blogs_ACLE-Documentation.md"
+          },
+          "Children": [
+            "Blogs_ACLE-Planning",
+            "Blogs_ACLE-Code",
+            "Blogs_ACLE-Documentation"
+          ],
+          "TargetExamples": [
+            "Healthline/EN/What_Is_Diabetes",
+            "Healthline.csv"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "Blog_ACLE": {
+          "WorkflowId": "Blog_ACLE",
+          "Domain": "Blog",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/Blog/Blog_ACLE.md",
+            "Planning": "Workflows/ACC/Blog/Blog_ACLE-Planning.md",
+            "Code": "Workflows/ACC/Blog/Blog_ACLE-Code.md",
+            "Documentation": "Workflows/ACC/Blog/Blog_ACLE-Documentation.md"
+          },
+          "Children": [
+            "Blog_ACLE-Planning",
+            "Blog_ACLE-Code",
+            "Blog_ACLE-Documentation"
+          ],
+          "TargetExamples": [
+            "HIEN/Software_Engineers_Ke_Liye_AI_Acha_Hai_Ya_Bura",
+            "HIEN.csv"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "DefaultTheme": "_Basic",
+            "DefaultVersionPolicy": "latest"
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "Role_ACLE": {
+          "WorkflowId": "Role_ACLE",
+          "Domain": "Role",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/Role/Role_ACLE.md",
+            "Planning": "Workflows/ACC/Role/Role_ACLE-Planning.md",
+            "Code": "Workflows/ACC/Role/Role_ACLE-Code.md",
+            "Documentation": "Workflows/ACC/Role/Role_ACLE-Documentation.md"
+          },
+          "Children": [
+            "Role_ACLE-Planning",
+            "Role_ACLE-Code",
+            "Role_ACLE-Documentation"
+          ],
+          "TargetExamples": [
+            "Software_Engineer",
+            "CEO",
+            "Product_Manager",
+            "Roles.csv"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "SpeedMode": true,
+            "InternetRequired": true
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        }
+      },
+      "Wikipedia": {
+        "Wikipedia_Article": {
+          "WorkflowId": "Wikipedia_Article",
+          "Domain": "Wikipedia",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/Wikipedia/Wikipedia_Article.md",
+            "Planning": "Workflows/ACC/Wikipedia/Wikipedia_Article-Planning.md",
+            "Code": "Workflows/ACC/Wikipedia/Wikipedia_Article-Code.md",
+            "Documentation": "Workflows/ACC/Wikipedia/Wikipedia_Article-Documentation.md"
+          },
+          "Children": [
+            "Wikipedia_Article-Planning",
+            "Wikipedia_Article-Code",
+            "Wikipedia_Article-Documentation"
+          ],
+          "TargetExamples": [
+            "A",
+            "Wikipedia_A.csv",
+            "Albert_Einstein"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "SpeedMode": true,
+            "InternetRequired": true
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        }
+      },
+      "Blogs": {
+        "Blogs_New": {
+          "WorkflowId": "Blogs_New",
+          "Domain": "Blogs",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/Blogs/Blogs_New.md",
+            "Planning": "Workflows/ACC/Blogs/Blogs_New-Planning.md",
+            "Code": "Workflows/ACC/Blogs/Blogs_New-Code.md",
+            "Documentation": "Workflows/ACC/Blogs/Blogs_New-Documentation.md"
+          },
+          "Children": [
+            "Blogs_New-Planning",
+            "Blogs_New-Code",
+            "Blogs_New-Documentation"
+          ],
+          "TargetExamples": [
+            "healthline.com",
+            "Healthline.csv"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "SpeedMode": true,
+            "InternetRequired": true
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        }
+      },
+      "Blog": {
+        "Blog_Article": {
+          "WorkflowId": "Blog_Article",
+          "Domain": "Blog",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/Blog/Blog_Article.md",
+            "Planning": "Workflows/ACC/Blog/Blog_Article-Planning.md",
+            "Code": "Workflows/ACC/Blog/Blog_Article-Code.md",
+            "Documentation": "Workflows/ACC/Blog/Blog_Article-Documentation.md"
+          },
+          "Children": [
+            "Blog_Article-Planning",
+            "Blog_Article-Code",
+            "Blog_Article-Documentation"
+          ],
+          "TargetExamples": [
+            "Software_Engineers_Ke_Liye_AI_Acha_Hai_Ya_Bura",
+            "Articles.csv"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "SpeedMode": false,
+            "InternetRequired": false
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        }
+      },
+      "Role": {
+        "Role_HIEN": {
+          "WorkflowId": "Role_HIEN",
+          "Domain": "Role",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/Role/Role_HIEN.md",
+            "Planning": "Workflows/ACC/Role/Role_HIEN-Planning.md",
+            "Documentation": "Workflows/ACC/Role/Role_HIEN-Documentation.md"
+          },
+          "Children": [
+            "Role_HIEN-Planning",
+            "Role_HIEN-Documentation"
+          ],
+          "TargetExamples": [
+            "Software_Engineer",
+            "CEO",
+            "Product_Manager",
+            "Roles.csv"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "SpeedMode": false,
+            "InternetRequired": false
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        }
+      },
+      "Course": {
+        "Course_New": {
+          "WorkflowId": "Course_New",
+          "Domain": "Course",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/Course/Course_New.md",
+            "Planning": "Workflows/ACC/Course/Course_New-Planning.md",
+            "Code": "Workflows/ACC/Course/Course_New-Code.md",
+            "Documentation": "Workflows/ACC/Course/Course_New-Documentation.md"
+          },
+          "Children": [
+            "Course_New-Planning",
+            "Course_New-Code",
+            "Course_New-Documentation"
+          ],
+          "TargetExamples": [
+            "AI",
+            "Data_Science",
+            "Cybersecurity",
+            "Programs.csv"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "SpeedMode": false,
+            "InternetRequired": false
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        },
+        "Course_ACLE": {
+          "WorkflowId": "Course_ACLE",
+          "Domain": "Course",
+          "Type": "Workflow_Plural",
+          "Files": {
+            "Plural": "Workflows/ACC/Course/Course_ACLE.md",
+            "Planning": "Workflows/ACC/Course/Course_ACLE-Planning.md",
+            "Code": "Workflows/ACC/Course/Course_ACLE-Code.md",
+            "Documentation": "Workflows/ACC/Course/Course_ACLE-Documentation.md"
+          },
+          "Children": [
+            "Course_ACLE-Planning",
+            "Course_ACLE-Code",
+            "Course_ACLE-Documentation"
+          ],
+          "TargetExamples": [
+            "AI_Developer",
+            "Advanced_Data_Analytics",
+            "Course_ACLE_Planner.csv",
+            "/Aliens/Course"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "SpeedMode": false,
+            "InternetRequired": true
+          },
+          "Policies": {
+            "UpdateWorkflowRule": "create-or-update as per workflow",
+            "Approval": "manifest + ACC.Safety",
+            "Outputs": "ACC.Output"
+          }
+        }
+      },
+      "Git": {
+        "Git_Push": {
+          "WorkflowId": "Git_Push",
+          "Domain": "Git",
+          "Type": "Workflow_Utility",
+          "Files": {
+            "Main": "Workflows/ACC/Git/Git_Push.md"
+          },
+          "Children": [],
+          "TargetExamples": [
+            "Course_ACLE",
+            "WebOS",
+            "WebSDK, WebOS"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "NoForcePush": true,
+            "NoRebase": true,
+            "InternetRequired": true
+          },
+          "Policies": {
+            "Approval": "manifest + ACC.Safety",
+            "Safety": "pull-before-push, no-force, no-rebase, conflict-abort"
+          }
+        },
+        "Git_Pull": {
+          "WorkflowId": "Git_Pull",
+          "Domain": "Git",
+          "Type": "Workflow_Utility",
+          "Files": {
+            "Main": "Workflows/ACC/Git/Git_Pull.md"
+          },
+          "Children": [],
+          "TargetExamples": [
+            "Course_ACLE",
+            "WebOS, WebSDK"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "NoRebase": true,
+            "InternetRequired": true
+          },
+          "Policies": {
+            "Approval": "manifest + ACC.Safety",
+            "Safety": "auto-stash-dirty, no-rebase, conflict-abort-restore"
+          }
+        },
+        "Git_Clone": {
+          "WorkflowId": "Git_Clone",
+          "Domain": "Git",
+          "Type": "Workflow_Utility",
+          "Files": {
+            "Main": "Workflows/ACC/Git/Git_Clone.md"
+          },
+          "Children": [],
+          "TargetExamples": [
+            "https://github.com/AliensCompany/Course_ACLE.git",
+            "https://github.com/AliensCompany/WebOS.git | WebOS_Dev"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "NoOverwrite": true,
+            "InternetRequired": true
+          },
+          "Policies": {
+            "Approval": "manifest + ACC.Safety",
+            "Safety": "no-overwrite-existing, partial-clone-cleanup, verify-after-clone"
+          }
+        },
+        "Git_Stash": {
+          "WorkflowId": "Git_Stash",
+          "Domain": "Git",
+          "Type": "Workflow_Utility",
+          "Files": {
+            "Main": "Workflows/ACC/Git/Git_Stash.md"
+          },
+          "Children": [],
+          "TargetExamples": [
+            "Course_ACLE",
+            "WebOS"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "NoStashClear": true,
+            "InternetRequired": false
+          },
+          "Policies": {
+            "Approval": "manifest + ACC.Safety",
+            "Safety": "include-untracked, descriptive-message, no-stash-clear, guarded-drop"
+          }
+        }
+      },
+      "LegacyWorkflows": {
+        "WebOS.OLD": [
+          "Workflows/ACC/WebOS.OLD/WebOS_Engine_PHP.md",
+          "Workflows/ACC/WebOS.OLD/WebOS_Engine_PHP_Update.md",
+          "Workflows/ACC/WebOS.OLD/WebOS_Engine_JS.md",
+          "Workflows/ACC/WebOS.OLD/WebOS_Engine_JS_Update.md",
+          "Workflows/ACC/WebOS.OLD/WebOS_Engine_SQL.md",
+          "Workflows/ACC/WebOS.OLD/WebOS_Engine_SQL_Update.md",
+          "Workflows/ACC/WebOS.OLD/WebOS_Engine_Bash.md",
+          "Workflows/ACC/WebOS.OLD/WebOS_Engine_Bash_Update.md"
+        ],
+        "WebApp.OLD": [
+          "Workflows/ACC/WebApp.OLD/WebApp.md",
+          "Workflows/ACC/WebApp.OLD/WebApp_Update.md",
+          "Workflows/ACC/WebApp.OLD/WebApp_Structure.md",
+          "Workflows/ACC/WebApp.OLD/WebApp_Structure_Update.md",
+          "Workflows/ACC/WebApp.OLD/WebApp_Component.md",
+          "Workflows/ACC/WebApp.OLD/WebApp_Component_Update.md",
+          "Workflows/ACC/WebApp.OLD/WebApp_Template.md",
+          "Workflows/ACC/WebApp.OLD/WebApp_Template_Update.md"
+        ],
+        "WebBrand.OLD": [
+          "Workflows/ACC/WebBrand.OLD/WebBrand.md",
+          "Workflows/ACC/WebBrand.OLD/WebBrand_Update.md",
+          "Workflows/ACC/WebBrand.OLD/WebBrand_Structure.md",
+          "Workflows/ACC/WebBrand.OLD/WebBrand_Structure_Update.md",
+          "Workflows/ACC/WebBrand.OLD/WebBrand_Component.md",
+          "Workflows/ACC/WebBrand.OLD/WebBrand_Component_Update.md",
+          "Workflows/ACC/WebBrand.OLD/WebBrand_Template.md",
+          "Workflows/ACC/WebBrand.OLD/WebBrand_Template_Update.md"
+        ]
+      }
+    }
