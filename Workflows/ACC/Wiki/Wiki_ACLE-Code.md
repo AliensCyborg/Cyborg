@@ -43,8 +43,8 @@ Requires:
 ExampleFiles:
   - "/Aliens/Cyborg/AlienCyborg/Code/convert_article.py"
   - "/Aliens/Cyborg/AlienCyborg/Code/batch_wiki.py"
-  - "/Aliens/Wiki_ACLE/assets/css/aliens-cinematic.css"
-  - "/Aliens/Wiki_ACLE/assets/js/aliens-cinematic.js"
+  - "/Aliens/ACLE/assets/css/aliens-cinematic.css"
+  - "/Aliens/ACLE/assets/js/aliens-cinematic.js"
 Notes:
   - This workflow RUNS Python scripts — it does NOT write code files directly.
   - The "code" here is the conversion output (HTML + JSON + audio) not traditional source code.
@@ -75,7 +75,7 @@ require_once "Workflows/ACC/_Refs/ACC.Output.md"
 - Sirf specified article ko convert karo
 - Source Wiki repo (`/Aliens/Wiki/`) me koi bhi modification forbidden
 - Converter scripts (`convert_article.py`, `batch_wiki.py`) modify karna forbidden
-- Shared assets (`/Aliens/Wiki_ACLE/assets/`) modify karna forbidden
+- Shared assets (`/Aliens/ACLE/assets/`) modify karna forbidden
 - `batch_progress.json` manually edit karna forbidden (script manages it; located at `/Aliens/.Alien/{Developer_Username}/State/Wiki_ACLE/batch_progress.json`)
 - Koi extra article add karna forbidden
 - Description me jo nahi bola, woh add karna forbidden
@@ -133,9 +133,9 @@ Before executing conversion, verify these prerequisites:
 - Failure => error `WF_CONVERTER_NOT_FOUND` with exact missing file path
 
 ## [07.4] Shared Assets Check
-- `/Aliens/Wiki_ACLE/assets/css/aliens-cinematic.css` must exist
-- `/Aliens/Wiki_ACLE/assets/js/aliens-cinematic.js` must exist
-- `/Aliens/Wiki_ACLE/assets/svg/aliens-logo-defs.svg` must exist
+- `/Aliens/ACLE/assets/css/aliens-cinematic.css` must exist
+- `/Aliens/ACLE/assets/js/aliens-cinematic.js` must exist
+- `/Aliens/ACLE/assets/svg/aliens-logo-defs.svg` must exist
 - Failure => error `WF_ENVIRONMENT_INCOMPLETE` with missing asset path
 
 ## [07.5] Source Article Check
@@ -323,7 +323,7 @@ If article conversion fails:
 
 # [12] Safety Rules (Enforcement)
 1. Source READ-ONLY: `/Aliens/Wiki/{ArticlePath}.md` — no create/modify/delete
-2. Shared assets READ-ONLY: `/Aliens/Wiki_ACLE/assets/` — no modification
+2. Shared assets READ-ONLY: `/Aliens/ACLE/assets/` — no modification
 3. Converter scripts READ-ONLY: do not modify `convert_article.py` or `batch_wiki.py`
 4. `batch_progress.json` managed by script only: no manual edits during run (path: `/Aliens/.Alien/{Developer_Username}/State/Wiki_ACLE/batch_progress.json`)
 5. NoDelete = true: never delete any output file (even failed/partial ones)

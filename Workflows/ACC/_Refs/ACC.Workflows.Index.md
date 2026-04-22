@@ -33,9 +33,12 @@ Yeh index file ka purpose:
 ## [02] Folder Map (Library Layout)
 ### A) Common Engine Files
 - `Workflows/ACC/_Common/Workflow_Plural.md`
+- `Workflows/ACC/_Common/Workflow_Plural-Update.md`
 - `Workflows/ACC/_Common/Workflow_Singular.md`
+- `Workflows/ACC/_Common/Workflow_Singular-Audit.md`
 - `Workflows/ACC/_Common/Workflow_Singular-Planning.md`
 - `Workflows/ACC/_Common/Workflow_Singular-Code.md`
+- `Workflows/ACC/_Common/Workflow_Singular-Reaudit.md`
 - `Workflows/ACC/_Common/Workflow_Singular-Documentation.md`
 
 ### B) Refs (Rules + References)
@@ -82,8 +85,18 @@ Har “main workflow” ke 4 files:
 4) **Child - Documentation**
 - `{WorkflowId}-Documentation.md` (Type: Workflow_Singular-Documentation)
 
+5) **Child - Reaudit (Update workflows)**
+- `{WorkflowId}-Reaudit.md` (Type: Workflow_Singular-Reaudit)
+- Mandatory for every `*_Update` workflow. Sits between Code and Documentation.
+
 Plural file ALWAYS calls (default order):
 - `{WorkflowId}-Planning` -> `{WorkflowId}-Code` -> `{WorkflowId}-Documentation`
+
+Update workflows (`*_Update`) call (default order):
+- `{WorkflowId}-Audit` -> `{WorkflowId}-Planning` -> `{WorkflowId}-Code`
+  -> `{WorkflowId}-Reaudit` -> `{WorkflowId}-Documentation`
+- Reaudit verdict `noncompliant` => loop back to Planning (Quality Over Speed; no
+  default iteration cap).
 
 ---
 

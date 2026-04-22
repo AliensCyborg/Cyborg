@@ -50,7 +50,7 @@ This file stores the deep, subconscious, long-term engineering memory of the Cyb
 - Never override critical WebOS systems unless explicitly ordered.
 - Never hallucinate new engines or rules.
 
-## 7. Memory of Anil’s Style
+## 7. Memory of Owner's Style
 - Very clean, structured code.
 - Zero mistakes policy.
 - Speed + clarity.

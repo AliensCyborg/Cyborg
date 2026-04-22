@@ -127,6 +127,15 @@ If any required section cannot be resolved/created:
 Call:
 - Workflow( "WebApp_Screen_Update-Code", "{AppName}/{ScreenName}", "{Description}" )
 
+## Step C.5: Reaudit (Post-Code Verification, Read-only)
+- Workflow( "WebApp_Screen_Update-Reaudit", "{AppName}/{ScreenName}", "{Description}" )
+
+Loop Rule (Non-Negotiable):
+- `compliant`    => proceed to Documentation.
+- `noncompliant` => loop back to Planning -> Code -> Reaudit until compliant.
+- Documentation MUST NOT run while verdict is `noncompliant`.
+- See `_Common/Workflow_Plural.md` [05A].
+
 ## Step D: Documentation (Child Workflow)
 Call:
 - Workflow( "WebApp_Screen_Update-Documentation", "{AppName}/{ScreenName}", "{Description}" )

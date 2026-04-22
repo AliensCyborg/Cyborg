@@ -39,6 +39,7 @@ Requires:
 Calls:
   - WebOS_Engine_PHP-Planning
   - WebOS_Engine_PHP-Code
+  - WebOS_Engine_PHP-Reaudit
   - WebOS_Engine_PHP-Documentation
   - WebOS_Engine_PHP_Update
 Notes:
@@ -137,7 +138,20 @@ Hard Rules:
 - Only create/update the single target engine file.
 - Do NOT modify other engines or shared core files unless child workflow explicitly lists them as required outputs.
 
-### Step 3: Documentation
+### Step 3: Reaudit (Post-Code Verification, Read-only)
+Call:
+- Workflow("WebOS_Engine_PHP-Reaudit", "{EngineName}", "{Description}")
+
+Expected Output:
+- `/Aliens/.Alien/{Developer_Username}/Planning/WebOS/Engine/PHP/{EngineName}.reaudit.md`
+
+Loop Rule (Non-Negotiable):
+- Verdict `compliant`    => proceed to Step 4 (Documentation).
+- Verdict `noncompliant` => loop back to Step 1 (Planning) -> Step 2 (Code) -> Step 3 (Reaudit) until compliant.
+- Documentation MUST NOT run while verdict is `noncompliant`.
+- See `_Common/Workflow_Plural.md` [05A] for full semantics.
+
+### Step 4: Documentation
 Call:
 - Workflow("WebOS_Engine_PHP-Documentation", "{EngineName}", "{Description}")
 

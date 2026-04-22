@@ -161,7 +161,7 @@ Methods should follow:
 - No Hindi script; use Hinglish (Romanized) where needed
 
 Hard anti-regression rule:
-- Existing engines may contain legacy author names (e.g. A’nil Nayak). Do NOT copy.
+- Existing engines may contain legacy author names (e.g. ALegacy Author). Do NOT copy.
 - On CREATE and UPDATE, set header `Author` exactly to `AlienCyborg`.
 
 Footer (mandatory; deterministic):

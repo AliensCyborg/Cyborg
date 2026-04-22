@@ -48,6 +48,7 @@ Calls:
   - WebOS_Engine_Bash_Update-Audit
   - WebOS_Engine_Bash_Update-Planning
   - WebOS_Engine_Bash_Update-Code
+  - WebOS_Engine_Bash_Update-Reaudit
   - WebOS_Engine_Bash_Update-Documentation
 Safety:
   NoDelete: true
@@ -143,7 +144,20 @@ Code hard requirement:
 - Modify only the target `.sh` file.
 - No feature loss; preserve existing flags/behavior unless explicitly requested.
 
-### Step 4: Documentation
+### Step 4: Reaudit (Post-Code Verification, Read-only)
+Call:
+- Workflow("WebOS_Engine_Bash_Update-Reaudit", "{EngineName}", "{Description}")
+
+Expected Output:
+- `/Aliens/.Alien/{Developer_Username}/Planning/WebOS/Engine/Bash/{EngineName}.update.reaudit.md`
+
+Loop Rule (Non-Negotiable):
+- `compliant`    => proceed to Step 5 (Documentation).
+- `noncompliant` => loop back to Step 2 (Planning) -> Step 3 (Code) -> Step 4 (Reaudit) until compliant.
+- Documentation MUST NOT run while verdict is `noncompliant`.
+- See `_Common/Workflow_Plural.md` [05A] for full semantics.
+
+### Step 5: Documentation
 Call:
 - Workflow("WebOS_Engine_Bash_Update-Documentation", "{EngineName}", "{Description}")
 

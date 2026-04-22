@@ -41,10 +41,12 @@ Requires:
 Calls:
   - WebOS_Engine_JS-Planning
   - WebOS_Engine_JS-Code
+  - WebOS_Engine_JS-Reaudit
   - WebOS_Engine_JS-Documentation
   - WebOS_Engine_JS_Update-Audit
   - WebOS_Engine_JS_Update-Planning
   - WebOS_Engine_JS_Update-Code
+  - WebOS_Engine_JS_Update-Reaudit
   - WebOS_Engine_JS_Update-Documentation
 Notes:
   - Legacy misspelling support: runner normalizes older prompts to canonical "Documentation".
@@ -124,7 +126,20 @@ Call:
 Output:
 - "/Aliens/WebOS/{LatestVersion}/unit/js/{EngineName}.js"
 
-#### Step 3: Documentation
+#### Step 3: Reaudit (Post-Code Verification, Read-only)
+Call:
+- Workflow("WebOS_Engine_JS-Reaudit", "{EngineName}", "{Description}")
+
+Output:
+- "/Aliens/.Alien/{Developer_Username}/Planning/WebOS/Engine/JS/{EngineName}.reaudit.md"
+
+Loop Rule (Non-Negotiable):
+- `compliant`    => proceed to Step 4 (Documentation).
+- `noncompliant` => loop back to Step 1 (Planning) -> Step 2 (Code) -> Step 3 (Reaudit) until compliant.
+- Documentation MUST NOT run while verdict is `noncompliant`.
+- See `_Common/Workflow_Plural.md` [05A] for full semantics.
+
+#### Step 4: Documentation
 Call:
 - Workflow("WebOS_Engine_JS-Documentation", "{EngineName}", "{Description}")
 
@@ -155,7 +170,18 @@ Call:
 Output:
 - "/Aliens/WebOS/{LatestVersion}/unit/js/{EngineName}.js"
 
-#### Step 4: Documentation
+#### Step 4: Reaudit (Update — Post-Code Verification, Read-only)
+Call:
+- Workflow("WebOS_Engine_JS_Update-Reaudit", "{EngineName}", "{Description}")
+
+Output:
+- "/Aliens/.Alien/{Developer_Username}/Planning/WebOS/Engine/JS/{EngineName}.update.reaudit.md"
+
+Loop Rule:
+- `noncompliant` => loop back to Update Planning -> Update Code -> Update Reaudit until compliant.
+- Documentation MUST NOT run while verdict is `noncompliant`.
+
+#### Step 5: Documentation
 Call:
 - Workflow("WebOS_Engine_JS_Update-Documentation", "{EngineName}", "{Description}")
 

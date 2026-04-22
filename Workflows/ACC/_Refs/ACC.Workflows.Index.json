@@ -2,8 +2,8 @@
   "RefId": "ACC.Workflows.Index",
   "Type": "RegistryIndex",
   "Status": "Stable",
-  "Version": "26.00.00",
-  "LastUpdated": "2026-02-27",
+  "Version": "26.09.00",
+  "LastUpdated": "2026-04-18",
   "PathPrefix": "Workflows/ACC/",
   "Folders": {
     "Common": "Workflows/ACC/_Common/",
@@ -36,7 +36,9 @@
       "Role": "Workflows/ACC/Role/",
       "Course": "Workflows/ACC/Course/",
       "ACLE": "Workflows/ACC/ACLE/",
-      "Git": "Workflows/ACC/Git/"
+      "Git": "Workflows/ACC/Git/",
+      "Attendance": "Workflows/ACC/Attendance/",
+      "Session": "Workflows/ACC/Session/"
     },
     "LegacyDomains": {
       "WebOS": "Workflows/ACC/WebOS.OLD/",
@@ -46,9 +48,12 @@
   },
   "CommonFiles": [
         "Workflows/ACC/_Common/Workflow_Plural.md",
+        "Workflows/ACC/_Common/Workflow_Plural-Update.md",
         "Workflows/ACC/_Common/Workflow_Singular.md",
+        "Workflows/ACC/_Common/Workflow_Singular-Audit.md",
         "Workflows/ACC/_Common/Workflow_Singular-Planning.md",
         "Workflows/ACC/_Common/Workflow_Singular-Code.md",
+        "Workflows/ACC/_Common/Workflow_Singular-Reaudit.md",
         "Workflows/ACC/_Common/Workflow_Singular-Documentation.md"
       ],
       "RefFiles": [
@@ -59,6 +64,7 @@
         "Workflows/ACC/_Refs/ACC.Memory.md",
         "Workflows/ACC/_Refs/ACC.Manifest.md",
         "Workflows/ACC/_Refs/ACC.Errors.md",
+        "Workflows/ACC/_Refs/ACC.ACLE.md",
         "Workflows/ACC/_Refs/ACC.UI.Premium.md",
         "Workflows/ACC/_Refs/WebOS_Engines.md",
         "Workflows/ACC/_Refs/WebOS_System.md",
@@ -73,6 +79,15 @@
           "Code",
           "Documentation"
         ],
+        "ChildOrderUpdate": [
+          "Audit",
+          "Planning",
+          "Code",
+          "Reaudit",
+          "Documentation"
+        ],
+        "ReauditMandatoryForUpdateWorkflows": true,
+        "MaxReauditIterationsDefault": 0,
         "NoDelete": true,
         "DefaultTheme": "_Basic",
         "DefaultVersionPolicy": "latest (fallback PHP.26.00.00)",
@@ -323,13 +338,17 @@
             "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_Class.md",
             "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_Class-Planning.md",
             "Code": "Workflows/ACC/WebSDK/WebSDK_Module_Class-Code.md",
+            "Reaudit": "Workflows/ACC/WebSDK/WebSDK_Module_Class-Reaudit.md",
             "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_Class-Documentation.md"
           },
           "Children": [
             "WebSDK_Module_Class-Planning",
             "WebSDK_Module_Class-Code",
+            "WebSDK_Module_Class-Reaudit",
             "WebSDK_Module_Class-Documentation"
           ],
+          "DefaultOrder": ["Planning", "Code", "Reaudit", "Documentation"],
+          "MaxReauditIterations": 0,
           "TargetExamples": [
             "User, Account"
           ],
@@ -353,13 +372,17 @@
             "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_Class_Update.md",
             "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_Class_Update-Planning.md",
             "Code": "Workflows/ACC/WebSDK/WebSDK_Module_Class_Update-Code.md",
+            "Reaudit": "Workflows/ACC/WebSDK/WebSDK_Module_Class_Update-Reaudit.md",
             "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_Class_Update-Documentation.md"
           },
           "Children": [
             "WebSDK_Module_Class_Update-Planning",
             "WebSDK_Module_Class_Update-Code",
+            "WebSDK_Module_Class_Update-Reaudit",
             "WebSDK_Module_Class_Update-Documentation"
           ],
+          "DefaultOrder": ["Audit", "Planning", "Code", "Reaudit", "Documentation"],
+          "MaxReauditIterations": 0,
           "TargetExamples": [
             "User, Account"
           ],
@@ -383,11 +406,13 @@
             "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_API.md",
             "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_API-Planning.md",
             "Code": "Workflows/ACC/WebSDK/WebSDK_Module_API-Code.md",
+            "Reaudit": "Workflows/ACC/WebSDK/WebSDK_Module_API-Reaudit.md",
             "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_API-Documentation.md"
           },
           "Children": [
             "WebSDK_Module_API-Planning",
             "WebSDK_Module_API-Code",
+            "WebSDK_Module_API-Reaudit",
             "WebSDK_Module_API-Documentation"
           ],
           "TargetExamples": [
@@ -413,11 +438,13 @@
             "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_API_Update.md",
             "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_API_Update-Planning.md",
             "Code": "Workflows/ACC/WebSDK/WebSDK_Module_API_Update-Code.md",
+            "Reaudit": "Workflows/ACC/WebSDK/WebSDK_Module_API_Update-Reaudit.md",
             "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_API_Update-Doc.md"
           },
           "Children": [
             "WebSDK_Module_API_Update-Planning",
             "WebSDK_Module_API_Update-Code",
+            "WebSDK_Module_API_Update-Reaudit",
             "WebSDK_Module_API_Update-Doc"
           ],
           "TargetExamples": [
@@ -443,11 +470,13 @@
             "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_SQL.md",
             "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_SQL-Planning.md",
             "Code": "Workflows/ACC/WebSDK/WebSDK_Module_SQL-Code.md",
+            "Reaudit": "Workflows/ACC/WebSDK/WebSDK_Module_SQL-Reaudit.md",
             "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_SQL-Documentation.md"
           },
           "Children": [
             "WebSDK_Module_SQL-Planning",
             "WebSDK_Module_SQL-Code",
+            "WebSDK_Module_SQL-Reaudit",
             "WebSDK_Module_SQL-Documentation"
           ],
           "TargetExamples": [
@@ -473,11 +502,13 @@
             "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_Cron.md",
             "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_Cron-Planning.md",
             "Code": "Workflows/ACC/WebSDK/WebSDK_Module_Cron-Code.md",
+            "Reaudit": "Workflows/ACC/WebSDK/WebSDK_Module_Cron-Reaudit.md",
             "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_Cron-Documentation.md"
           },
           "Children": [
             "WebSDK_Module_Cron-Planning",
             "WebSDK_Module_Cron-Code",
+            "WebSDK_Module_Cron-Reaudit",
             "WebSDK_Module_Cron-Documentation"
           ],
           "TargetExamples": [
@@ -503,11 +534,13 @@
             "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_Webhook.md",
             "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_Webhook-Planning.md",
             "Code": "Workflows/ACC/WebSDK/WebSDK_Module_Webhook-Code.md",
+            "Reaudit": "Workflows/ACC/WebSDK/WebSDK_Module_Webhook-Reaudit.md",
             "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_Webhook-Documentation.md"
           },
           "Children": [
             "WebSDK_Module_Webhook-Planning",
             "WebSDK_Module_Webhook-Code",
+            "WebSDK_Module_Webhook-Reaudit",
             "WebSDK_Module_Webhook-Documentation"
           ],
           "TargetExamples": [
@@ -533,11 +566,13 @@
             "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_Component.md",
             "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_Component-Planning.md",
             "Code": "Workflows/ACC/WebSDK/WebSDK_Module_Component-Code.md",
+            "Reaudit": "Workflows/ACC/WebSDK/WebSDK_Module_Component-Reaudit.md",
             "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_Component-Documentation.md"
           },
           "Children": [
             "WebSDK_Module_Component-Planning",
             "WebSDK_Module_Component-Code",
+            "WebSDK_Module_Component-Reaudit",
             "WebSDK_Module_Component-Documentation"
           ],
           "TargetExamples": [
@@ -563,11 +598,13 @@
             "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_Screen.md",
             "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_Screen-Planning.md",
             "Code": "Workflows/ACC/WebSDK/WebSDK_Module_Screen-Code.md",
+            "Reaudit": "Workflows/ACC/WebSDK/WebSDK_Module_Screen-Reaudit.md",
             "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_Screen-Documentation.md"
           },
           "Children": [
             "WebSDK_Module_Screen-Planning",
             "WebSDK_Module_Screen-Code",
+            "WebSDK_Module_Screen-Reaudit",
             "WebSDK_Module_Screen-Documentation"
           ],
           "TargetExamples": [
@@ -593,11 +630,13 @@
             "Plural": "Workflows/ACC/WebSDK/WebSDK_Module_JS.md",
             "Planning": "Workflows/ACC/WebSDK/WebSDK_Module_JS-Planning.md",
             "Code": "Workflows/ACC/WebSDK/WebSDK_Module_JS-Code.md",
+            "Reaudit": "Workflows/ACC/WebSDK/WebSDK_Module_JS-Reaudit.md",
             "Documentation": "Workflows/ACC/WebSDK/WebSDK_Module_JS-Documentation.md"
           },
           "Children": [
             "WebSDK_Module_JS-Planning",
             "WebSDK_Module_JS-Code",
+            "WebSDK_Module_JS-Reaudit",
             "WebSDK_Module_JS-Documentation"
           ],
           "TargetExamples": [
@@ -623,15 +662,17 @@
             "Plural": "Workflows/ACC/WebApp/WebApp_Component.md",
             "Planning": "Workflows/ACC/WebApp/WebApp_Component-Planning.md",
             "Code": "Workflows/ACC/WebApp/WebApp_Component-Code.md",
+            "Reaudit": "Workflows/ACC/WebApp/WebApp_Component-Reaudit.md",
             "Documentation": "Workflows/ACC/WebApp/WebApp_Component-Documentation.md"
           },
           "Children": [
             "WebApp_Component-Planning",
             "WebApp_Component-Code",
+            "WebApp_Component-Reaudit",
             "WebApp_Component-Documentation"
           ],
           "TargetExamples": [
-            "AlienCyborg/AlienCyborg_DepositNew, Social/Social_Post"
+            "AnilCyborg/AnilCyborg_DepositNew, Social/Social_Post"
           ],
           "Flags": {
             "IsUpdate": false,
@@ -653,15 +694,17 @@
             "Plural": "Workflows/ACC/WebApp/WebApp_Component_Update.md",
             "Planning": "Workflows/ACC/WebApp/WebApp_Component_Update-Planning.md",
             "Code": "Workflows/ACC/WebApp/WebApp_Component_Update-Code.md",
+            "Reaudit": "Workflows/ACC/WebApp/WebApp_Component_Update-Reaudit.md",
             "Documentation": "Workflows/ACC/WebApp/WebApp_Component_Update-Documentation.md"
           },
           "Children": [
             "WebApp_Component_Update-Planning",
             "WebApp_Component_Update-Code",
+            "WebApp_Component_Update-Reaudit",
             "WebApp_Component_Update-Documentation"
           ],
           "TargetExamples": [
-            "AlienCyborg/DepositNew, Social/Post"
+            "AnilCyborg/DepositNew, Social/Post"
           ],
           "Flags": {
             "IsUpdate": true,
@@ -683,11 +726,13 @@
             "Plural": "Workflows/ACC/WebApp/WebApp_CSS.md",
             "Planning": "Workflows/ACC/WebApp/WebApp_CSS-Planning.md",
             "Code": "Workflows/ACC/WebApp/WebApp_CSS-Code.md",
+            "Reaudit": "Workflows/ACC/WebApp/WebApp_CSS-Reaudit.md",
             "Documentation": "Workflows/ACC/WebApp/WebApp_CSS-Documentation.md"
           },
           "Children": [
             "WebApp_CSS-Planning",
             "WebApp_CSS-Code",
+            "WebApp_CSS-Reaudit",
             "WebApp_CSS-Documentation"
           ],
           "TargetExamples": [
@@ -713,11 +758,13 @@
             "Plural": "Workflows/ACC/WebApp/WebApp_CSS_Update.md",
             "Planning": "Workflows/ACC/WebApp/WebApp_CSS_Update-Planning.md",
             "Code": "Workflows/ACC/WebApp/WebApp_CSS_Update-Code.md",
+            "Reaudit": "Workflows/ACC/WebApp/WebApp_CSS_Update-Reaudit.md",
             "Documentation": "Workflows/ACC/WebApp/WebApp_CSS_Update-Documentation.md"
           },
           "Children": [
             "WebApp_CSS_Update-Planning",
             "WebApp_CSS_Update-Code",
+            "WebApp_CSS_Update-Reaudit",
             "WebApp_CSS_Update-Documentation"
           ],
           "TargetExamples": [
@@ -743,15 +790,17 @@
             "Plural": "Workflows/ACC/WebApp/WebApp_Section.md",
             "Planning": "Workflows/ACC/WebApp/WebApp_Section-Planning.md",
             "Code": "Workflows/ACC/WebApp/WebApp_Section-Code.md",
+            "Reaudit": "Workflows/ACC/WebApp/WebApp_Section-Reaudit.md",
             "Documentation": "Workflows/ACC/WebApp/WebApp_Section-Documentation.md"
           },
           "Children": [
             "WebApp_Section-Planning",
             "WebApp_Section-Code",
+            "WebApp_Section-Reaudit",
             "WebApp_Section-Documentation"
           ],
           "TargetExamples": [
-            "AlienCyborg/Deposit_Header, AlienCyborg/Home_Hero"
+            "AnilCyborg/Deposit_Header, AnilCyborg/Home_Hero"
           ],
           "Flags": {
             "IsUpdate": false,
@@ -773,11 +822,13 @@
             "Plural": "Workflows/ACC/WebApp/WebApp_Structure.md",
             "Planning": "Workflows/ACC/WebApp/WebApp_Structure-Planning.md",
             "Code": "Workflows/ACC/WebApp/WebApp_Structure-Code.md",
+            "Reaudit": "Workflows/ACC/WebApp/WebApp_Structure-Reaudit.md",
             "Documentation": "Workflows/ACC/WebApp/WebApp_Structure-Documentation.md"
           },
           "Children": [
             "WebApp_Structure-Planning",
             "WebApp_Structure-Code",
+            "WebApp_Structure-Reaudit",
             "WebApp_Structure-Documentation"
           ],
           "TargetExamples": [
@@ -803,11 +854,13 @@
             "Plural": "Workflows/ACC/WebApp/WebApp_Structure_Update.md",
             "Planning": "Workflows/ACC/WebApp/WebApp_Structure_Update-Planning.md",
             "Code": "Workflows/ACC/WebApp/WebApp_Structure_Update-Code.md",
+            "Reaudit": "Workflows/ACC/WebApp/WebApp_Structure_Update-Reaudit.md",
             "Documentation": "Workflows/ACC/WebApp/WebApp_Structure_Update-Documentation.md"
           },
           "Children": [
             "WebApp_Structure_Update-Planning",
             "WebApp_Structure_Update-Code",
+            "WebApp_Structure_Update-Reaudit",
             "WebApp_Structure_Update-Documentation"
           ],
           "TargetExamples": [
@@ -833,15 +886,17 @@
             "Plural": "Workflows/ACC/WebApp/WebApp_Layout.md",
             "Planning": "Workflows/ACC/WebApp/WebApp_Layout-Planning.md",
             "Code": "Workflows/ACC/WebApp/WebApp_Layout-Code.md",
+            "Reaudit": "Workflows/ACC/WebApp/WebApp_Layout-Reaudit.md",
             "Documentation": "Workflows/ACC/WebApp/WebApp_Layout-Documentation.md"
           },
           "Children": [
             "WebApp_Layout-Planning",
             "WebApp_Layout-Code",
+            "WebApp_Layout-Reaudit",
             "WebApp_Layout-Documentation"
           ],
           "TargetExamples": [
-            "AlienCyborg/Header, AlienCyborg/Footer"
+            "AnilCyborg/Header, AnilCyborg/Footer"
           ],
           "Flags": {
             "IsUpdate": false,
@@ -863,15 +918,17 @@
             "Plural": "Workflows/ACC/WebApp/WebApp_Section_Update.md",
             "Planning": "Workflows/ACC/WebApp/WebApp_Section_Update-Planning.md",
             "Code": "Workflows/ACC/WebApp/WebApp_Section_Update-Code.md",
+            "Reaudit": "Workflows/ACC/WebApp/WebApp_Section_Update-Reaudit.md",
             "Documentation": "Workflows/ACC/WebApp/WebApp_Section_Update-Documentation.md"
           },
           "Children": [
             "WebApp_Section_Update-Planning",
             "WebApp_Section_Update-Code",
+            "WebApp_Section_Update-Reaudit",
             "WebApp_Section_Update-Documentation"
           ],
           "TargetExamples": [
-            "AlienCyborg/Deposit_Header, AlienCyborg/Home_Hero"
+            "AnilCyborg/Deposit_Header, AnilCyborg/Home_Hero"
           ],
           "Flags": {
             "IsUpdate": true,
@@ -893,15 +950,17 @@
             "Plural": "Workflows/ACC/WebApp/WebApp_Screen.md",
             "Planning": "Workflows/ACC/WebApp/WebApp_Screen-Planning.md",
             "Code": "Workflows/ACC/WebApp/WebApp_Screen-Code.md",
+            "Reaudit": "Workflows/ACC/WebApp/WebApp_Screen-Reaudit.md",
             "Documentation": "Workflows/ACC/WebApp/WebApp_Screen-Documentation.md"
           },
           "Children": [
             "WebApp_Screen-Planning",
             "WebApp_Screen-Code",
+            "WebApp_Screen-Reaudit",
             "WebApp_Screen-Documentation"
           ],
           "TargetExamples": [
-            "AlienCyborg/Deposit, AlienCyborg/Home"
+            "AnilCyborg/Deposit, AnilCyborg/Home"
           ],
           "Flags": {
             "IsUpdate": false,
@@ -923,15 +982,17 @@
             "Plural": "Workflows/ACC/WebApp/WebApp_Screen_Update.md",
             "Planning": "Workflows/ACC/WebApp/WebApp_Screen_Update-Planning.md",
             "Code": "Workflows/ACC/WebApp/WebApp_Screen_Update-Code.md",
+            "Reaudit": "Workflows/ACC/WebApp/WebApp_Screen_Update-Reaudit.md",
             "Documentation": "Workflows/ACC/WebApp/WebApp_Screen_Update-Documentation.md"
           },
           "Children": [
             "WebApp_Screen_Update-Planning",
             "WebApp_Screen_Update-Code",
+            "WebApp_Screen_Update-Reaudit",
             "WebApp_Screen_Update-Documentation"
           ],
           "TargetExamples": [
-            "AlienCyborg/Deposit, AlienCyborg/Home"
+            "AnilCyborg/Deposit, AnilCyborg/Home"
           ],
           "Flags": {
             "IsUpdate": true,
@@ -953,11 +1014,13 @@
             "Plural": "Workflows/ACC/WebOS/WebOS_Engine_PHP.md",
             "Planning": "Workflows/ACC/WebOS/WebOS_Engine_PHP-Planning.md",
             "Code": "Workflows/ACC/WebOS/WebOS_Engine_PHP-Code.md",
+            "Reaudit": "Workflows/ACC/WebOS/WebOS_Engine_PHP-Reaudit.md",
             "Documentation": "Workflows/ACC/WebOS/WebOS_Engine_PHP-Documentation.md"
           },
           "Children": [
             "WebOS_Engine_PHP-Planning",
             "WebOS_Engine_PHP-Code",
+            "WebOS_Engine_PHP-Reaudit",
             "WebOS_Engine_PHP-Documentation"
           ],
           "TargetExamples": [
@@ -983,11 +1046,13 @@
             "Plural": "Workflows/ACC/WebOS/WebOS_Engine_JS.md",
             "Planning": "Workflows/ACC/WebOS/WebOS_Engine_JS-Planning.md",
             "Code": "Workflows/ACC/WebOS/WebOS_Engine_JS-Code.md",
+            "Reaudit": "Workflows/ACC/WebOS/WebOS_Engine_JS-Reaudit.md",
             "Documentation": "Workflows/ACC/WebOS/WebOS_Engine_JS-Documentation.md"
           },
           "Children": [
             "WebOS_Engine_JS-Planning",
             "WebOS_Engine_JS-Code",
+            "WebOS_Engine_JS-Reaudit",
             "WebOS_Engine_JS-Documentation"
           ],
           "TargetExamples": [
@@ -1013,11 +1078,13 @@
             "Plural": "Workflows/ACC/WebOS/WebOS_Engine_SQL.md",
             "Planning": "Workflows/ACC/WebOS/WebOS_Engine_SQL-Planning.md",
             "Code": "Workflows/ACC/WebOS/WebOS_Engine_SQL-Code.md",
+            "Reaudit": "Workflows/ACC/WebOS/WebOS_Engine_SQL-Reaudit.md",
             "Documentation": "Workflows/ACC/WebOS/WebOS_Engine_SQL-Documentation.md"
           },
           "Children": [
             "WebOS_Engine_SQL-Planning",
             "WebOS_Engine_SQL-Code",
+            "WebOS_Engine_SQL-Reaudit",
             "WebOS_Engine_SQL-Documentation"
           ],
           "TargetExamples": [
@@ -1043,11 +1110,13 @@
             "Plural": "Workflows/ACC/WebOS/WebOS_Engine_Bash.md",
             "Planning": "Workflows/ACC/WebOS/WebOS_Engine_Bash-Planning.md",
             "Code": "Workflows/ACC/WebOS/WebOS_Engine_Bash-Code.md",
+            "Reaudit": "Workflows/ACC/WebOS/WebOS_Engine_Bash-Reaudit.md",
             "Documentation": "Workflows/ACC/WebOS/WebOS_Engine_Bash-Documentation.md"
           },
           "Children": [
             "WebOS_Engine_Bash-Planning",
             "WebOS_Engine_Bash-Code",
+            "WebOS_Engine_Bash-Reaudit",
             "WebOS_Engine_Bash-Documentation"
           ],
           "TargetExamples": [
@@ -1577,6 +1646,209 @@
           "Policies": {
             "Approval": "manifest + ACC.Safety",
             "Safety": "include-untracked, descriptive-message, no-stash-clear, guarded-drop"
+          }
+        },
+        "Attendance": {
+          "WorkflowId": "Attendance",
+          "Domain": "Attendance",
+          "Type": "Workflow_Utility",
+          "Version": "26.04.03",
+          "Files": {
+            "Main": "Workflows/ACC/Attendance/Attendance.md"
+          },
+          "Children": [],
+          "TargetExamples": [
+            "C1071",
+            "C2042"
+          ],
+          "DescriptionExamples": [
+            "checkin | IST",
+            "checkout | IST | after day end",
+            "checkin | UTC"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "AppendOnly": true,
+            "Sharded": true,
+            "ShardingScheme": "Top-level only: L1=id[0:2], L2=id[0:4] padded. Inside cyborg: {YYYY}/{YYYY-MM-DD}.jsonl",
+            "LedgerPath": "Cyborg/{L1}/{L2}/{CyborgID}/{YYYY}/{YYYY-MM-DD}.jsonl",
+            "GeneratesDashboards": true,
+            "NoDelete": true,
+            "InternetRequired": false
+          },
+          "Policies": {
+            "Approval": "manifest + ACC.Safety",
+            "Safety": "append-only per-day JSONL, top-level 2-level shard, atomic Profile.json + per-cyborg Dashboard.md + repo Dashboard.md + _index.json updates, never edit history"
+          }
+        },
+        "Check-in": {
+          "WorkflowId": "Check-in",
+          "Domain": "Session",
+          "Type": "Workflow_Plural",
+          "Version": "26.04.02",
+          "Files": {
+            "Main": "Workflows/ACC/Session/Check-in.md"
+          },
+          "Children": [
+            "Git_Pull",
+            "Attendance",
+            "Attendance_Dashboard"
+          ],
+          "TargetExamples": [
+            "C1071"
+          ],
+          "DescriptionExamples": [
+            "IST",
+            "UTC",
+            "PST"
+          ],
+          "BranchModel": {
+            "CriticalReposOnMain": ["Cyborg", ".github"],
+            "TeamReposOnCyborgBranch": [
+              ".Alien", "ACLE", "Attendance", "Blog", "Course",
+              "Course_ACLE", "Course_ATLE", "Docs", "Feedback",
+              "Project", "Report", "Skills", "Skill_ACLE", "Skill_ATLE",
+              "WebApp", "WebBrand", "WebDB", "WebSDK",
+              "Wiki", "Wiki_ACLE", "Wiki_ATLE"
+            ],
+            "ExcludedRepos": ["WebOS"],
+            "Note": "WebOS excluded: only platform owner works on it."
+          },
+          "SessionSuiteTasks": [
+            "T1 Welcome banner",
+            "T2 Role reminder",
+            "T3 Pending planner CSV scan",
+            "T4 Recent activity digest (7d)",
+            "T5 Branch sanity check",
+            "T6 Manifest validation",
+            "T7 Secret health",
+            "T8 Clock drift",
+            "T9 Disk space",
+            "T10 Log rotation"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "NoForcePush": true,
+            "NoRebase": true,
+            "NoAutoClone": true,
+            "NoAutoBranchCreate": true,
+            "DynamicGitAccount": true,
+            "InternetRequired": true
+          },
+          "Policies": {
+            "Approval": "manifest + ACC.Safety",
+            "Safety": "delegate-only, isolated child failures, no auto-clone, no CSV auto-resume, per-cyborg branch, dynamic git account (no hardcoded creds)"
+          }
+        },
+        "Git_Branch": {
+          "WorkflowId": "Git_Branch",
+          "Domain": "Git",
+          "Type": "Workflow_Utility",
+          "Version": "26.04.00",
+          "Files": {
+            "Main": "Workflows/ACC/Git/Git_Branch.md"
+          },
+          "Children": [],
+          "TargetExamples": [
+            "C1071"
+          ],
+          "DescriptionExamples": [
+            "Initial branch setup on new machine",
+            "Re-bootstrap after clean clone"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "Idempotent": true,
+            "AdditiveOnly": true,
+            "NoDelete": true,
+            "NoForcePush": true,
+            "NoRebase": true,
+            "NoClone": true,
+            "InternetRequired": true
+          },
+          "ExcludedRepos": ["Cyborg", ".github", "WebOS"],
+          "Policies": {
+            "Approval": "manifest + ACC.Safety",
+            "Safety": "create-only branches, never delete/rename/force, per-repo isolated, dirty-tree stash+restore, identity-gated (Target must equal manifest.Developer.CyborgID unless admin-override)"
+          }
+        },
+        "Attendance_Dashboard": {
+          "WorkflowId": "Attendance_Dashboard",
+          "Domain": "Attendance",
+          "Type": "Workflow_Utility",
+          "Version": "26.04.00",
+          "Files": {
+            "Main": "Workflows/ACC/Attendance/Attendance_Dashboard.md"
+          },
+          "Children": [],
+          "TargetExamples": [
+            "ALL",
+            "C1071",
+            "C1071,C2042"
+          ],
+          "DescriptionExamples": [
+            "Scheduled rebuild (weekly)",
+            "Post-Check-in refresh",
+            "Post-checkout refresh"
+          ],
+          "Flags": {
+            "IsUpdate": false,
+            "ReadOnlyLedger": true,
+            "NeverTouchJSONL": true,
+            "NoDelete": true,
+            "InternetRequired": false
+          },
+          "Policies": {
+            "Approval": "manifest + ACC.Safety",
+            "Safety": "read-only for JSONL history, overwrite-only for derived Dashboard.md + _index counters"
+          }
+        },
+        "Check-out": {
+          "WorkflowId": "Check-out",
+          "Domain": "Session",
+          "Type": "Workflow_Plural",
+          "Version": "26.04.01",
+          "Files": {
+            "Main": "Workflows/ACC/Session/Check-out.md"
+          },
+          "Children": [
+            "Attendance",
+            "Git_Push",
+            "Report",
+            "Attendance_Dashboard"
+          ],
+          "TargetExamples": [
+            "C1071"
+          ],
+          "DescriptionExamples": [
+            "IST",
+            "UTC",
+            "PST"
+          ],
+          "BranchModel": {
+            "NeverPushRepos": ["Cyborg", ".github", "WebOS"],
+            "PushReposOnCyborgBranch": [
+              ".Alien", "ACLE", "Attendance", "Blog", "Course",
+              "Course_ACLE", "Course_ATLE", "Docs", "Feedback",
+              "Project", "Report", "Skills", "Skill_ACLE", "Skill_ATLE",
+              "WebApp", "WebBrand", "WebDB", "WebSDK",
+              "Wiki", "Wiki_ACLE", "Wiki_ATLE"
+            ],
+            "Note": "Outbound mirror of Check-in. Cyborg/.github/WebOS never pushed from a cyborg workstation."
+          },
+          "Flags": {
+            "IsUpdate": false,
+            "NoDelete": true,
+            "NoForcePush": true,
+            "NoRebase": true,
+            "NoAutoCommit": true,
+            "DynamicGitAccount": true,
+            "InternetRequired": true
+          },
+          "Policies": {
+            "Approval": "manifest + ACC.Safety",
+            "Safety": "delegate-only, isolated child failures, no force-push, no auto-commit, no mirror, per-cyborg branch, dynamic git account"
           }
         }
       },

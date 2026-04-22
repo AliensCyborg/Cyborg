@@ -418,7 +418,7 @@ Rules:
 - When: planner CSV me `Assign` column missing ho, ya task row (`Status=0`) me `Assign` blank ho.
 - Hint:
   - Planner schema update karo: `Assign` column add karo
-  - Har actionable row (Status=0) me `Assign` set karo (example: `AnilNayak`)
+  - Har actionable row (Status=0) me `Assign` set karo (example: `JaneDoe`)
 - Action: `stop_run`
 
 #### ACC_ERR_TASK_NOT_ASSIGNED

@@ -24,8 +24,10 @@ Calls:
   - "WebSDK_Module_Class_Update-Audit"
   - "WebSDK_Module_Class_Update-Planning"
   - "WebSDK_Module_Class_Update-Code"
+  - "WebSDK_Module_Class_Update-Reaudit"
   - "WebSDK_Module_Class_Update-Documentation"
-DefaultOrder: ["Audit", "Planning", "Code", "Documentation"]
+DefaultOrder: ["Audit", "Planning", "Code", "Reaudit", "Documentation"]
+MaxReauditIterations: 0   # 0 = unlimited (Quality Over Speed). Advisory bound only; never used as a quality shortcut.
 PermissionsRequested:
   NoDelete: true
   ProdWrite: true
@@ -111,13 +113,20 @@ Target meaning (NEW SSOT):
 ## [04] Execution Plan (Plural Orchestration)
 Per Target, sequence:
 0) `WebSDK_Module_Class_Update-Audit` (read-only audit)
-1) `WebSDK_Module_Class_Update-Planning` (plan create)
-2) `WebSDK_Module_Class_Update-Code` (apply update to code)
-3) `WebSDK_Module_Class_Update-Documentation` (update docs)
+1) `WebSDK_Module_Class_Update-Planning` (plan create; MUST emit `## Required Items` block)
+2) `WebSDK_Module_Class_Update-Code` (apply update to code; bounded by Required Items)
+3) `WebSDK_Module_Class_Update-Reaudit` (verify Required Items applied + flag out-of-scope)
+4) `WebSDK_Module_Class_Update-Documentation` (update docs)
+
+Reaudit loop (Non-Negotiable):
+- If Reaudit verdict is `compliant`     => proceed to Documentation.
+- If Reaudit verdict is `noncompliant` => loop back to Planning -> Code -> Reaudit
+  until compliant. No iteration limit by default (Quality Over Speed).
+- Documentation MUST NOT run while Reaudit is `noncompliant`.
 
 If manifest says manual approval:
 - Planning always allowed
-- Code + Docs only after approval gate (Workflow_Plural rules decide gate behavior)
+- Code + Reaudit + Docs only after approval gate (Workflow_Plural rules decide gate behavior)
 
 ## [05] Child Workflow Contract
 Call signature (MUST be consistent):

@@ -28,6 +28,7 @@ Requires:
 ChildWorkflows:
   - WebOS_Engine_SQL-Planning
   - WebOS_Engine_SQL-Code
+  - WebOS_Engine_SQL-Reaudit
   - WebOS_Engine_SQL-Documentation
 ...
 
@@ -83,7 +84,11 @@ For each Target (in given order):
 2) Call Code:
 - `Workflow("WebOS_Engine_SQL-Code", "<Target>", "<Description>")`
 
-3) Call Documentation:
+3) Call Reaudit (Post-Code Verification, Read-only):
+- `Workflow("WebOS_Engine_SQL-Reaudit", "<Target>", "<Description>")`
+- Loop Rule (Non-Negotiable): `noncompliant` => loop back to Planning -> Code -> Reaudit until `compliant`. Documentation MUST NOT run while `noncompliant`. See `_Common/Workflow_Plural.md` [05A].
+
+4) Call Documentation:
 - `Workflow("WebOS_Engine_SQL-Documentation", "<Target>", "<Description>")`
 
 Hard rules:

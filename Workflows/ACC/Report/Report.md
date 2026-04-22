@@ -1,44 +1,411 @@
 ---
 WorkflowId: Report
-Title: "Developer Activity Report Generator (Daily · Weekly · Monthly · Yearly · Dashboard)"
+Title: "Cyborg Activity Report Generator (Daily · Weekly · Monthly · Yearly · Dashboard)"
 Category: System
 Type: Workflow_Plural
 Domain: Report
-Scope: "Generate comprehensive BI reports for a specific Cyborg — covering all work done on THAT Cyborg only"
+Scope: "Generate comprehensive BI reports for a SINGLE Cyborg — only this CPU's activity."
 
 Status: Stable
-Version: 26.00.02
-LastUpdated: 2026-03-12
+Version: 26.02.00
+LastUpdated: 2026-04-19
 
 Intent:
   Summary: >
     Yeh workflow ek specific Cyborg ke liye COMPLETE activity reports generate karta hai.
-    Reports me sirf usi Cyborg par kiya gaya kaam include hota hai — kisi dusre Cyborg ka kaam nahi.
-    Missing reports (Daily, Weekly, Monthly, Yearly, Dashboard) automatically detect aur generate hote hain.
-    Output 2 jagah save hoti hai: Cyborg-level (CPU-centric) aur Project-level (ACC Planner-centric Dashboard).
+    Reports me sirf usi Cyborg ka kaam include hota hai — na Projects, na Repos, na Aliens.
+    Missing Daily/Weekly/Monthly/Yearly/Dashboard reports automatically detect + fill hote hain.
+    Output ek hi jagah: /Aliens/Report/Cyborg/{CyborgID}/
   WhenToUse:
-    - "Jab bhi kisi Cyborg ki activity reports generate karni hon"
-    - "Jab missing daily/weekly/monthly/yearly reports detect aur fill karni hon"
-    - "Jab Dashboard refresh karna ho (full history)"
+    - "Kisi Cyborg ki activity reports generate karni hon"
+    - "Missing daily/weekly/monthly/yearly reports detect + fill karni hon"
+    - "Dashboard refresh karna ho (full history)"
+  SiblingWorkflows:
+    - "Report_Project  → ACC Planner (project-level) reports"
+    - "Report_Repo     → Workspace repos BI + in-repo Dashboard.md"
+    - "Report_Alien    → Human team-member (Alien) consolidated reports"
+
+Inputs:
+  Targets:
+    Format: "single Cyborg ID (must match manifest Developer.Username or registered CyborgID)"
+    Examples:
+      - "AC0000"
+      - "AC0001"
+      - "C1072"
+    Validation:
+      - "Exactly 1 Cyborg ID allowed"
+      - "Cyborg ID MUST match /Aliens/manifest.json → Developer.Username (or .CyborgID / .CPUID)"
+      - "Mismatch => STOP with ACC_ERR_REPORT_CPU_MISMATCH"
+      - "Project / Repo / Alien targets yahan allowed NAHI — use sibling workflows"
+  Description:
+    Format: "Any human language"
+
+Defaults:
+  ReportFormat: "md"
+  ScanMethod: "CreationTime"
+  ExcludeFromScan:
+    - ".git"
+    - "node_modules"
+    - "__pycache__"
+    - ".Alien"
+    - "Report"
+
+Permissions:
+  NoDelete: true
+  CanCreateFiles: true
+  CanEditFiles: true
+  CanModifyProd: false
+  CanTouchDB: false
+  CanRunTerminal: true
+
+Approval:
+  Mode: "auto"
+
+Requires:
+  Common:
+    - "Workflows/ACC/_Common/Workflow_Universal.md"
+    - "Workflows/ACC/_Common/Workflow_Plural.md"
+  Refs:
+    - "Workflows/ACC/_Refs/ACC.Targets.md"
+    - "Workflows/ACC/_Refs/ACC.Paths.md"
+    - "Workflows/ACC/_Refs/ACC.Output.md"
+    - "Workflows/ACC/_Refs/ACC.Safety.md"
+    - "Workflows/ACC/_Refs/ACC.Manifest.md"
+    - "Workflows/ACC/_Refs/ACC.Errors.md"
+  Data:
+    - "/Aliens/manifest.json"
+  Knowledge:
+    - "Cyborg/AnilCyborg/Ecosystem/Members.Aliens_vs_Cyborgs.md"
+
+Calls:
+  ChildWorkflows:
+    - "Report-Planning"
+    - "Report-Code"
+    - "Report-Documentation"
+
+Outputs:
+  RunRecord: true
+  Planning: true
+  Code: true
+  Documentation: false
+  ReportFiles:
+    Root: "/Aliens/Report/Cyborg/{CyborgID}/"
+    Files:
+      - "Daily_Report_YYYY-MM-DD.md"
+      - "Weekly_Report_YYYY-WNN.md"
+      - "Monthly_Report_YYYY-MM.md"
+      - "Yearly_Report_YYYY.md"
+      - "Dashboard.md"
+
+ErrorCodes:
+  ACC_ERR_REPORT_CPU_MISMATCH: "Target CyborgID does not match manifest Developer.Username"
+  ACC_ERR_REPORT_NO_DATA: "No working days found for this CyborgID"
+  ACC_ERR_REPORT_SCAN_FAILED: "Filesystem scan failed"
+  ACC_ERR_DESCRIPTION_REQUIRED: "Description empty / missing"
+---
+
+# Report Workflow (Cyborg-only)
+
+## [0] Purpose
+
+`Report` workflow sirf **ek Cyborg** ki activity reports banata hai — **only that CPU's work**.
+Projects, repos, aur Aliens ke liye **alag sibling workflows** hain.
+
+### Call Signature
+
+```
+Workflow( 'Report', '{CyborgID}', '{Description}' )
+```
+
+### Examples
+
+```
+Workflow( 'Report', 'AC0000',  'Generate all missing reports' )
+Workflow( 'Report', 'AC0001',  'Generate all missing reports' )
+Workflow( 'Report', 'C1072',   'February monthly report generate karo' )
+```
+
+### Dual Purpose — BI + Cyborg Handoff
+
+1. **Business Intelligence:** Speed, quality, volume, velocity.
+2. **Handoff:** `VSCode_Chat` workflow reports ka use karke naya Cyborg par context load karta hai — zero context loss.
+
+---
+
+## [1] Universal Includes
+
+1) `Workflows/ACC/_Common/Workflow_Universal.md`
+2) `Workflows/ACC/_Common/Workflow_Plural.md`
+
+---
+
+## [2] Child Chain
+
+1) `Report-Planning` — Data discovery + filesystem scan
+2) `Report-Code` — Report files generate (Daily / Weekly / Monthly / Yearly / Dashboard)
+3) `Report-Documentation` — (Optional) index update
+
+---
+
+## [3] Cyborg ID Validation (STRICT — Gate #1)
+
+```
+1. Read /Aliens/manifest.json
+2. Extract Developer.Username (primary), Developer.CyborgID, Developer.CPUID
+3. Case-sensitive compare with Target
+4. Mismatch => STOP with ACC_ERR_REPORT_CPU_MISMATCH
+```
+
+Rules:
+- Exactly 1 CyborgID in Target.
+- No `Project` / `Repo` / email-style targets — use sibling workflows.
+
+---
+
+## [3.1] Terminology Rule
+
+Reports me **"Cyborg ID"** use hoga; "CPU ID" / "Developer ID" forbidden.
+Context: `Ecosystem/Members.Aliens_vs_Cyborgs.md`.
+
+---
+
+## [4] Output Location
+
+```
+/Aliens/Report/Cyborg/{CyborgID}/
+├── Daily_Report_YYYY-MM-DD.md     (per working day)
+├── Weekly_Report_YYYY-WNN.md      (per ISO week)
+├── Monthly_Report_YYYY-MM.md      (per calendar month)
+├── Yearly_Report_YYYY.md          (per calendar year)
+└── Dashboard.md                   (always-latest lifetime BI dashboard)
+```
+
+Content: Pura kaam jo is Cyborg ne kiya — across ALL folders/repos. **No** Project / Repo / Alien sub-reports.
+
+---
+
+## [5] Report Types (Content Requirements)
+
+### 5.1 Daily
+
+```
+1. Header: Date, Day, CyborgID, Workspace
+2. Day summary (files, lines, size, workstreams, outcomes)
+3. Work performed (per-workstream breakdown + deliverables + metrics)
+4. Folder activity table
+5. Quality notes
+6. Mermaid charts (file distribution pie; activity timeline)
+7. Next-day outlook (optional)
+```
+
+### 5.2 Weekly
+
+```
+1. Header: Week#, date range, CyborgID
+2. Week summary (working days, files, size, projects active)
+3. Daily breakdown table
+4. Highlights
+5. Mermaid: daily bar, workstream pie
+6. Velocity metrics
+7. Week-over-week comparison
+```
+
+### 5.3 Monthly
+
+```
+1. Header: Month + year + CyborgID
+2. Summary (days, files, size, projects, milestones)
+3. Weekly breakdown table
+4. Activity calendar (visual grid)
+5. Project progress
+6. Mermaid: weekly bar, project pie, cumulative line
+7. Month-over-month comparison
+8. Activity heatmap
+```
+
+### 5.4 Yearly
+
+```
+1. Header + status
+2. Year summary
+3. Monthly breakdown table
+4. Quarterly analysis (Q1..Q4)
+5. Project portfolio (Gantt)
+6. Engineering metrics (languages, code:docs ratio, velocity)
+7. Mermaid: monthly, quarterly, YoY
+8. Highlights + strategic insights
+```
+
+### 5.5 Dashboard (ALWAYS regenerate)
+
+```
+1. Executive scoreboard
+2. KPIs
+3. Full timeline Gantt
+4. All-months calendar
+5. Daily production analytics
+6. Phase / project breakdowns
+7. Engineering artifacts inventory
+8. Quality scorecard
+9. Weekly + monthly summaries
+10. Velocity + peak records
+11. Report index
+12. Grand totals
+13. Strategic insights
+```
+
+---
+
+## [6] Data Discovery
+
+### 6.1 Scan
+
+```powershell
+Get-ChildItem -Path 'C:\Aliens' -Recurse -File |
+  Where-Object { $_.FullName -notmatch '\\(\.git|node_modules|__pycache__|\.Alien|Report)\\' } |
+  Group-Object {$_.CreationTime.ToString('yyyy-MM-dd')}, {($_.FullName -replace '^C:\\Aliens\\','') -replace '\\.*$',''} |
+  Select-Object Count, Name | Sort-Object Name
+```
+
+### 6.2 Scan script location
+
+`/Aliens/Cyborg/AnilCyborg/Code/` — each script has header comment (purpose / workflow / date).
+
+### 6.3 Output handling
+
+- Group by date → working days.
+- Filter bundled assets (old-timestamp framework files).
+- Day-of-week via `(Get-Date).DayOfWeek`.
+
+---
+
+## [7] Missing Report Detection
+
+```
+1. Scan → working days list
+2. List existing reports
+3. Queue missing Daily / Weekly / Monthly / Yearly
+4. Dashboard always regenerated
+```
+
+Generation order: Daily → Weekly → Monthly → Yearly → Dashboard (chronological).
+
+---
+
+## [8] Quality Standards
+
+- Clean markdown, tables, Mermaid charts.
+- Date format `YYYY-MM-DD` in filenames.
+- Cross-links between reports.
+- Enterprise BI depth — every metric backed by data.
+- **No** data from other Cyborgs.
+
+---
+
+## [9] Terminal Policy
+
+Allowed only for scanning / counts / sizes / date-verification / existing-report listing.
+Not allowed: generating report content via scripts, bulk file creation, destructive ops.
+
+---
+
+## [10] Errors
+
+| Code | Condition | Action |
+|:---|:---|:---|
+| `ACC_ERR_REPORT_CPU_MISMATCH` | Target ≠ manifest | STOP |
+| `ACC_ERR_REPORT_NO_DATA` | No working days found | STOP |
+| `ACC_ERR_REPORT_SCAN_FAILED` | Scan error | STOP |
+| `ACC_ERR_DESCRIPTION_REQUIRED` | Description missing | STOP |
+
+---
+
+## [11] Execution Summary
+
+```
+Workflow( 'Report', '{CyborgID}', '{Description}' )
+
+Step 1: Gate #1 — CyborgID validation
+Step 2: Report-Planning
+Step 3: Report-Code
+Step 4: Report-Documentation (optional)
+Step 5: Save RunRecord
+```
+
+---
+
+## [12] Sibling Workflows
+
+| Scope                                 | Workflow         |
+|:--------------------------------------|:-----------------|
+| ACC Planner projects                  | `Report_Project` |
+| Workspace repos + in-repo Dashboard   | `Report_Repo`    |
+| Alien (human team member) reports     | `Report_Alien`   |
+
+---
+
+## [13] Changelog
+
+- **26.02.00** (2026-04-19): **SPLIT** — Project / Repo / Alien scopes moved out into `Report_Project`, `Report_Repo`, `Report_Alien` sibling workflows. `Report` is now Cyborg-only.
+- 26.01.00 (2026-04-19): Interim unified 5-modes version (superseded).
+- 26.00.02 (2026-03-12): Project concept redefined = ACC Planner CSV.
+- 26.00.01 (2026-03-12): `/Aliens/Project/` clarified as planner storage.
+- 26.00.00 (2026-03-12): Initial Report workflow.
+---
+WorkflowId: Report
+Title: "Aliens Activity Report Generator (Cyborg · Project · Repo · Alien — Daily · Weekly · Monthly · Yearly · Dashboard)"
+Category: System
+Type: Workflow_Plural
+Domain: Report
+Scope: "Generate comprehensive BI reports. Target determines scope: Cyborg, Project (all / per-Cyborg), Repo, or Alien (human team member)."
+
+Status: Stable
+Version: 26.01.00
+LastUpdated: 2026-04-19
+
+Intent:
+  Summary: >
+    Yeh workflow Aliens ecosystem ki COMPLETE BI reports generate karta hai. Target string ke
+    format se decide hota hai ke reports ka SCOPE kya hoga — Cyborg (current CPU), Project (ACC
+    Planners), Repo (workspace repositories), ya Alien (human team member jiske under multiple
+    Cyborgs kaam karte hain). Har mode me missing Daily/Weekly/Monthly/Yearly/Dashboard reports
+    detect aur fill hote hain.
+  WhenToUse:
+    - "Cyborg ki activity reports (only this CPU) generate karni hon"
+    - "Saare ya specific-Cyborg-ke ACC Planner projects ki reports banani hon"
+    - "Har repo ki repo-level reports + in-repo Dashboard.md update karna ho"
+    - "Kisi human team member (Alien) ki consolidated reports (manual + Cyborg merged) banani hon"
     - "Periodic reporting cycle ke end me (din/week/month/year close)"
 
 Inputs:
   Targets:
-    Format: "single Cyborg ID (must match manifest Developer.Username or a registered Cyborg ID)"
+    Format: "One of 5 modes — see Section [3.4] Target Mode Resolution"
+    Modes:
+      - "{CyborgID}                  → Only this Cyborg's activity (e.g., 'AC0000', 'C1072')"
+      - "Project                      → ALL ACC Planner projects, aggregated across all Cyborgs"
+      - "Project/{CyborgID}           → Only this Cyborg's assigned projects (e.g., 'Project/AC0001')"
+      - "Repo                         → ALL workspace repos + update each repo's Dashboard.md"
+      - "{alien-email}                → Alien (human) reports (e.g., 'himanshu@aliens.company')"
     Examples:
       - "AC0000"
       - "C1072"
+      - "Project"
+      - "Project/AC0001"
+      - "Repo"
+      - "himanshu@aliens.company"
+      - "himanshu@aliens.id"
     Validation:
-      - "Targets me sirf 1 Cyborg ID allowed (comma-separated multiple Cyborgs NOT allowed)"
-      - "Cyborg ID MUST match /Aliens/manifest.json → Developer.Username"
-      - "Mismatch => STOP with ACC_ERR_REPORT_CPU_MISMATCH"
+      - "Exactly 1 target allowed (comma-separated multiple targets NOT allowed)"
+      - "Cyborg-mode Target MUST match /Aliens/manifest.json → Developer.Username"
+      - "Project/{CyborgID} mode → CyborgID part must match manifest"
+      - "Alien email mode → must end with @aliens.company or @aliens.id"
+      - "Mode detection per Section [3.4]; unresolvable target => ACC_ERR_REPORT_TARGET_INVALID"
   Description:
     Format: "Any human language"
     Examples:
       - "Generate all missing reports for this CPU"
+      - "Generate all missing reports"
       - "Dashboard refresh karo with latest data"
-      - "February 2026 ke liye monthly report generate karo"
-      - "Puri history cover karo — koi din miss nahi hona chahiye"
 
 Defaults:
   Version: "latest"
@@ -92,7 +459,8 @@ Outputs:
   Code: true
   Documentation: false
   ReportFiles:
-    CyborgLevel:
+    CyborgMode:
+      Trigger: "Target = {CyborgID}"
       Root: "/Aliens/Report/Cyborg/{CyborgID}/"
       Files:
         - "Daily_Report_YYYY-MM-DD.md"
@@ -100,15 +468,55 @@ Outputs:
         - "Monthly_Report_YYYY-MM.md"
         - "Yearly_Report_YYYY.md"
         - "Dashboard.md"
-    ProjectLevel:
+      Note: "ONLY this Cyborg's activity. NO auto-generation of Project reports (breaking change vs v26.00.x)."
+    ProjectAllMode:
+      Trigger: "Target = 'Project' (literal)"
       Root: "/Aliens/Report/Project/{AppName}/"
       Files:
+        - "Daily_Report_YYYY-MM-DD.md"
+        - "Weekly_Report_YYYY-WNN.md"
+        - "Monthly_Report_YYYY-MM.md"
+        - "Yearly_Report_YYYY.md"
         - "Dashboard.md"
-      Note: "AppName = ACC Planner CSV se extract hota hai (e.g., ToDo, Teams, Admin). See Section [9]."
+      Note: "All AppNames from /Aliens/Project/ALL/ planners. Data aggregated across all Cyborgs."
+    ProjectPerCyborgMode:
+      Trigger: "Target = 'Project/{CyborgID}'"
+      Root: "/Aliens/Report/Project/{CyborgID}/{AppName}/"
+      Files:
+        - "Daily_Report_YYYY-MM-DD.md"
+        - "Weekly_Report_YYYY-WNN.md"
+        - "Monthly_Report_YYYY-MM.md"
+        - "Yearly_Report_YYYY.md"
+        - "Dashboard.md"
+      Note: "Only planner rows where assign = {CyborgID}. Uses /Aliens/Project/{CyborgID}/*.csv as SSOT if present, else filters ALL/."
+    RepoMode:
+      Trigger: "Target = 'Repo' (literal)"
+      Root: "/Aliens/Report/Repo/{RepoName}/"
+      Files:
+        - "Daily_Report_YYYY-MM-DD.md"
+        - "Weekly_Report_YYYY-WNN.md"
+        - "Monthly_Report_YYYY-MM.md"
+        - "Yearly_Report_YYYY.md"
+        - "Dashboard.md"
+      ExtraAction:
+        - "ALSO create/update /Aliens/{RepoName}/Dashboard.md (in-repo BI dashboard)"
+      Note: "RepoName source = /Aliens/Cyborg/AnilCyborg/Ecosystem/Repos.Index.md (SSOT)."
+    AlienMode:
+      Trigger: "Target = '{alias}@aliens.company' or '{alias}@aliens.id'"
+      Root: "/Aliens/Report/Alien/{alias}/"
+      Files:
+        - "Daily_Report_YYYY-MM-DD.md"
+        - "Weekly_Report_YYYY-WNN.md"
+        - "Monthly_Report_YYYY-MM.md"
+        - "Yearly_Report_YYYY.md"
+        - "Dashboard.md"
+      Note: "Combines manual Alien activity + merged activity of all Cyborgs under this Alien's control. Each merged entry flagged with source CyborgID — never presented as manual work."
 
 ErrorCodes:
-  ACC_ERR_REPORT_CPU_MISMATCH: "Targets Cyborg ID does not match manifest Developer.Username"
-  ACC_ERR_REPORT_NO_DATA: "No working days found for the specified CPU"
+  ACC_ERR_REPORT_TARGET_INVALID: "Target does not match any of the 5 supported modes (Cyborg / Project / Project/{CyborgID} / Repo / Alien)"
+  ACC_ERR_REPORT_CPU_MISMATCH: "Cyborg-mode Target does not match manifest Developer.Username"
+  ACC_ERR_REPORT_ALIEN_UNKNOWN: "Alien email does not resolve to a known team member in /Aliens/manifest.json Team.Aliens[]"
+  ACC_ERR_REPORT_NO_DATA: "No working days / planner rows / repo activity found for the specified target"
   ACC_ERR_REPORT_SCAN_FAILED: "Filesystem scan failed or returned no results"
 ---
 
@@ -116,11 +524,15 @@ ErrorCodes:
 
 ## [0] Purpose (Hinglish)
 
-`Report` workflow ka goal: ek specific **Cyborg ID** ke liye **comprehensive activity reports** generate karna.
+`Report` workflow ka goal: Aliens ecosystem ki **comprehensive BI reports** generate karna. Target string
+ke format se decide hota hai ke reports ka SCOPE kya hoga — Cyborg (current CPU), Project (ACC Planners),
+Repo (workspace repositories), ya Alien (human team member).
 
-Reports me **sirf usi Cyborg par kiya gaya kaam** shamil hota hai — kisi dusre Cyborg ka data report me nahi aayega.
+**v26.01.00 Breaking Change:** Cyborg-mode me ab **Project reports automatically generate NAHI hote**.
+Project reports ke liye alag se `Workflow('Report', 'Project', ...)` ya `Workflow('Report', 'Project/{CyborgID}', ...)`
+run karna hoga. Yeh concern-separation improve karta hai aur accidental scope-creep prevent karta hai.
 
-### Dual Purpose — BI + CPU Handoff
+### Dual Purpose — BI + Cyborg Handoff
 
 Reports ke **2 core purposes** hain:
 
@@ -142,19 +554,26 @@ Reports ke **2 core purposes** hain:
 
 See: `Workflows/ACC/VSCode/VSCode_Chat.md` for the handoff consumer workflow.
 
-### Call Signature
+### Call Signatures (5 Target Modes)
 
 ```
-Workflow( 'Report', '{CyborgID}', '{Description}' )
+# Mode 1 — Cyborg (only this CPU's activity; NO auto-Project)
+Workflow( 'Report', 'AC0000',                 'Generate all missing reports for this CPU' )
+
+# Mode 2 — All Projects (aggregated across all Cyborgs)
+Workflow( 'Report', 'Project',                'Generate all missing reports' )
+
+# Mode 3 — Projects for a specific Cyborg only
+Workflow( 'Report', 'Project/AC0001',         'Generate all missing reports' )
+
+# Mode 4 — All Repos (repo-level reports + update each repo's Dashboard.md)
+Workflow( 'Report', 'Repo',                   'Generate all missing reports' )
+
+# Mode 5 — Alien (human team member consolidated reports; Cyborgs merged with source flag)
+Workflow( 'Report', 'himanshu@aliens.company','Generate all missing reports' )
 ```
 
-**Examples:**
-
-```
-Workflow( 'Report', 'AC0000', 'Generate all missing reports for this CPU' )
-Workflow( 'Report', 'AC0000', 'Dashboard refresh with latest data' )
-Workflow( 'Report', 'C1072', 'February monthly report generate karo' )
-```
+See Section **[3.4] Target Mode Resolution** for dispatch logic.
 
 ---
 
@@ -173,25 +592,24 @@ Workflow( 'Report', 'C1072', 'February monthly report generate karo' )
 
 ---
 
-## [3] Cyborg ID Validation (STRICT — Gate #1)
+## [3] Cyborg ID Validation (STRICT — Gate #1, Cyborg-scope modes only)
 
-### 3.1 Manifest Load
+### 3.1 Applicability
+
+This gate applies to modes that carry a CyborgID:
+- **Mode 1** — `{CyborgID}`
+- **Mode 3** — `Project/{CyborgID}` (validates the CyborgID segment)
+
+For **Mode 2 (Project)**, **Mode 4 (Repo)**, and **Mode 5 (Alien)** — this gate does NOT apply; see Section [3.4].
+
+### 3.2 Manifest Load
 
 ```
 1. Read /Aliens/manifest.json
-2. Extract Developer.Username
-3. Compare with Targets (case-sensitive)
+2. Extract Developer.Username (and Developer.CyborgID if present)
+3. Compare with Target CyborgID segment (case-sensitive)
 4. Mismatch => STOP with ACC_ERR_REPORT_CPU_MISMATCH
 ```
-
-### 3.2 Validation Rules
-
-- Targets me **sirf 1 Cyborg ID** allowed.
-- Comma-separated multiple Cyborg IDs **forbidden** (yeh Singular-style single-target workflow hai Plural wrapper me).
-- Cyborg ID ko manifest ke `Developer.Username` se **exact match** hona chahiye.
-- Mismatch par bilkul bhi koi report generate nahi hogi — hard stop.
-
-**Rationale:** Agar is PC ka `Developer.Username = AnilNayak` hai aur koi `AC0000` bhejta hai, to wo match nahi karega UNLESS manifest me `CyborgID` ya `DeveloperID` explicitly map kiya gaya ho. Agent ko manifest me available identification fields check karni hain.
 
 ### 3.3 Cyborg ID Resolution Order
 
@@ -201,6 +619,46 @@ Workflow( 'Report', 'C1072', 'February monthly report generate karo' )
 3. manifest.Developer.CPUID (if exists)
 4. None match => STOP
 ```
+
+---
+
+## [3.4] Target Mode Resolution (Dispatch Logic) — NEW in v26.01.00
+
+Target string ko resolve karne ka order (first match wins):
+
+```
+1. Target == 'Project' (exact, case-sensitive)
+     → Mode 2: ProjectAll
+     → Skip CyborgID validation
+     → Execute Section [9.X] All-Projects flow
+
+2. Target == 'Repo' (exact, case-sensitive)
+     → Mode 4: Repo
+     → Skip CyborgID validation
+     → Execute Section [14] Repo flow
+
+3. Target matches /^Project\/(.+)$/ (e.g., 'Project/AC0001')
+     → Mode 3: ProjectPerCyborg
+     → Extract CyborgID = capture group
+     → Run Gate #1 (Section [3]) on extracted CyborgID
+     → Execute Section [9.Y] Per-Cyborg-Projects flow
+
+4. Target matches /^[^@\s]+@aliens\.(company|id)$/
+     → Mode 5: Alien
+     → Skip CyborgID validation; run Alien validation (Section [15.2])
+     → Execute Section [15] Alien flow
+
+5. Target matches CyborgID pattern (no slashes, no @)
+     → Mode 1: Cyborg
+     → Run Gate #1 (Section [3])
+     → Execute Sections [4.1] + [5]–[8] (Cyborg-only flow)
+     → DO NOT auto-generate any Project reports (v26.01.00 behavior)
+
+6. Otherwise
+     → STOP with ACC_ERR_REPORT_TARGET_INVALID
+```
+
+**Rule:** Exactly ONE mode executes per workflow call. Modes do NOT cascade or chain automatically.
 
 ---
 
@@ -225,59 +683,119 @@ Background: CPU ID, Developer ID, aur Cyborg ID actual me ek hi cheez hai — le
 
 ---
 
-## [4] Report Output Locations (SSOT)
+## [4] Report Output Locations (SSOT — All 5 Modes)
 
-### 4.1 Cyborg-Level Reports (CPU-Centric)
+### 4.1 Mode 1 — Cyborg Reports (CPU-only; NO Project auto-gen)
 
 ```
 /Aliens/Report/Cyborg/{CyborgID}/
-├── Daily_Report_YYYY-MM-DD.md         (per working day)
-├── Weekly_Report_YYYY-WNN.md          (per ISO week)
-├── Monthly_Report_YYYY-MM.md          (per calendar month)
-├── Yearly_Report_YYYY.md              (per calendar year)
-└── Dashboard.md                       (always-latest aggregated BI dashboard)
+├── Daily_Report_YYYY-MM-DD.md
+├── Weekly_Report_YYYY-WNN.md
+├── Monthly_Report_YYYY-MM.md
+├── Yearly_Report_YYYY.md
+└── Dashboard.md
 ```
 
-**Content:** Pura kaam jo is CPU ne kiya — across ALL projects.
+**Content:** Pura kaam jo is Cyborg ne kiya — across ALL folders/repos. **No** project/planner/repo sub-reports.
 
-### 4.2 Project-Level Reports (ACC Planner-Centric)
+> **Breaking change vs v26.00.x:** Pehle Cyborg mode automatically `/Report/Project/{AppName}/` bhi generate karta tha. Ab nahi karta. Alag workflow call chahiye.
 
-**CRITICAL:** "Project" ka matlab code domain folders (WebOS, WebSDK, WebApp, Course_ACLE etc.) **NAHI** hai.
-"Project" ka matlab hai: **ACC Planner** — `/Aliens/Project/` folder me stored planning CSV files.
+### 4.2 Mode 2 — All Projects (ACC Planner-wide)
 
 ```
 /Aliens/Report/Project/{AppName}/
-└── Dashboard.md                       (planner progress dashboard for this app/engine)
+├── Daily_Report_YYYY-MM-DD.md
+├── Weekly_Report_YYYY-WNN.md
+├── Monthly_Report_YYYY-MM.md
+├── Yearly_Report_YYYY.md
+└── Dashboard.md
 ```
 
-**AppName** = ACC Planner CSV se extract hota hai:
-- `ToDo_Planner.csv` → AppName = `ToDo`
-- `Teams_Planner_STAGE_1.csv` → AppName = `Teams`
-- `WebOS_Engine_PHP_Update-5.csv` → AppName = `WebOS_Engine_PHP`
+**AppName** extraction rules: see Section [4.6].
 
-**Content:** Us app/engine ki planner status — total rows, pending/completed/failed counts,
-stage-wise breakdown, Cyborg assignment summary, aur delivery verification.
-Yeh code file counts / domain folder activity **nahi** hai — yeh **PLANNING status** hai.
+**Content:** Us app/engine ki planner status aggregated across ALL Cyborgs — total rows, pending/completed/failed,
+stage breakdown, per-Cyborg contribution, delivery verification. Daily/Weekly/Monthly/Yearly reports capture
+day-by-day throughput of that planner.
 
-**Dashboard.md aggregated hai:** Multiple Cyborgs ka planner data ek hi Dashboard me aggregate hota hai.
-
-> **FORBIDDEN:** Workspace top-level folders (WebOS/, WebSDK/, WebApp/, Course_ACLE/, Wiki/, etc.) ko "projects" samajh ke unke liye `/Report/Project/{DomainName}/` folder banana **allowed nahi** hai.
-
-### 4.3 Project ID (AppName) Discovery
-
-AppNames (= ProjectIDs) discover karne ke liye:
+### 4.3 Mode 3 — Projects for a Specific Cyborg
 
 ```
-1. Scan /Aliens/Project/ALL/ for planner CSV files
+/Aliens/Report/Project/{CyborgID}/{AppName}/
+├── Daily_Report_YYYY-MM-DD.md
+├── Weekly_Report_YYYY-WNN.md
+├── Monthly_Report_YYYY-MM.md
+├── Yearly_Report_YYYY.md
+└── Dashboard.md
+```
+
+**Data source priority:**
+
+```
+1. /Aliens/Project/{CyborgID}/*.csv  (if folder exists — this Cyborg's assigned subset)
+2. Else: filter rows from /Aliens/Project/ALL/*.csv WHERE assign = {CyborgID}
+```
+
+**Content:** Only rows assigned to this Cyborg. Same sub-structure as Mode 2 but scoped.
+
+### 4.4 Mode 4 — Repos (all workspace repos)
+
+**Part A — Repo-scoped reports folder:**
+
+```
+/Aliens/Report/Repo/{RepoName}/
+├── Daily_Report_YYYY-MM-DD.md
+├── Weekly_Report_YYYY-WNN.md
+├── Monthly_Report_YYYY-MM.md
+├── Yearly_Report_YYYY.md
+└── Dashboard.md
+```
+
+**Part B — In-repo Dashboard (MANDATORY extra action):**
+
+```
+/Aliens/{RepoName}/Dashboard.md     ← create if missing, update if present
+```
+
+**RepoName SSOT:** `/Aliens/Cyborg/AnilCyborg/Ecosystem/Repos.Index.md`
+
+**Exclusions:** `Attendance/Dashboard.md` is owned by the `Attendance_Dashboard` workflow and MUST NOT be overwritten.
+Workflow-owned in-repo dashboards are listed in Section [14.4].
+
+### 4.5 Mode 5 — Alien Reports (human team member)
+
+```
+/Aliens/Report/Alien/{alias}/
+├── Daily_Report_YYYY-MM-DD.md
+├── Weekly_Report_YYYY-WNN.md
+├── Monthly_Report_YYYY-MM.md
+├── Yearly_Report_YYYY.md
+└── Dashboard.md
+```
+
+**`{alias}`** = local-part of email. `himanshu@aliens.company` → alias = `himanshu`.
+
+**Content:** Consolidated BI of:
+- **Manual activity** by the Alien (human team member) — e.g., reviews, approvals, manual commits, decisions recorded in `/Aliens/.Alien/{alias}/`.
+- **Merged Cyborg activity** — reports of all Cyborgs under this Alien's control (AlienCyborg instances: typically up to 4 per Alien). Each merged entry **MUST be flagged** with `SourceCyborgID` — never presented as manual work.
+
+**Alien → Cyborgs resolution:** `/Aliens/manifest.json` → `Team.Aliens[]` → find entry with matching email → read `ControlsCyborgs[]` list.
+
+### 4.6 AppName (ProjectID) Discovery Rules
+
+For Mode 2 and Mode 3:
+
+```
+1. Scan /Aliens/Project/ALL/ for *.csv files
 2. Extract AppName from each filename:
-   - {AppName}_Planner.csv → AppName
-   - {AppName}_Planner_STAGE_{N}.csv → AppName
-   - {EngineType}_Update-{N}.csv → EngineType as AppName
-3. Deduplicate AppNames (multiple stages = same AppName)
-4. Each unique AppName gets its own report folder:
-   /Aliens/Report/Project/{AppName}/Dashboard.md
+   - {AppName}_Planner.csv                 → AppName
+   - {AppName}_Planner_STAGE_{N}.csv       → AppName (dedupe across stages)
+   - {EngineType}_Update-{N}.csv           → EngineType as AppName
+3. Deduplicate AppNames
+4. Each unique AppName → its own folder under the mode's root
 5. FORBIDDEN: code domain folders (WebOS/, WebSDK/ etc.) se ProjectID derive karna
 ```
+
+> **FORBIDDEN:** Workspace top-level folders ko "projects" samajhna. Code domains are repos (Mode 4), not projects.
 
 ---
 
@@ -454,7 +972,7 @@ Get-ChildItem -Path 'C:\Aliens' -Recurse -File `
 **MANDATORY:** Any scan/utility scripts MUST be created in:
 
 ```
-/Aliens/Cyborg/AlienCyborg/Code/
+/Aliens/Cyborg/AnilCyborg/Code/
 ```
 
 **NEVER** in workspace root (`/Aliens/`) or any other location.
@@ -728,7 +1246,7 @@ NOT ALLOWED:
 
 ### 10.2 Scan Script Rules
 
-- Scan scripts MUST go to `/Aliens/Cyborg/AlienCyborg/Code/`
+- Scan scripts MUST go to `/Aliens/Cyborg/AnilCyborg/Code/`
 - Each script MUST have a descriptive header
 - Scripts are reusable across report runs
 - After scan, data is used by AI agent to write reports
@@ -739,8 +1257,10 @@ NOT ALLOWED:
 
 | Error Code | Condition | Action |
 |:---|:---|:---|
-| `ACC_ERR_REPORT_CPU_MISMATCH` | Targets Cyborg ID ≠ manifest | STOP, report mismatch |
-| `ACC_ERR_REPORT_NO_DATA` | No working days found | STOP, report scan results |
+| `ACC_ERR_REPORT_TARGET_INVALID` | Target matches none of the 5 modes | STOP, show supported modes |
+| `ACC_ERR_REPORT_CPU_MISMATCH` | Cyborg Target ≠ manifest | STOP, report mismatch |
+| `ACC_ERR_REPORT_ALIEN_UNKNOWN` | Alien email not found in manifest Team.Aliens[] | STOP, report unknown Alien |
+| `ACC_ERR_REPORT_NO_DATA` | No working days / planner rows / repo activity | STOP, report scan results |
 | `ACC_ERR_REPORT_SCAN_FAILED` | PowerShell scan error | STOP, report error details |
 | `ACC_ERR_DESCRIPTION_REQUIRED` | Description empty/missing | STOP, ask for description |
 
@@ -749,19 +1269,172 @@ NOT ALLOWED:
 ## [12] Execution Summary
 
 ```
-Workflow( 'Report', '{CyborgID}', '{Description}' )
+Workflow( 'Report', '{Target}', '{Description}' )
 
-Step 1: Validate Cyborg ID against manifest ← Gate
-Step 2: Run Report-Planning (scan + discover)
-Step 3: Run Report-Code (generate all missing reports)
-Step 4: Run Report-Documentation (optional: index update)
-Step 5: Save RunRecord
+Step 1: Target Mode Resolution (Section [3.4]) — dispatch to one of 5 modes
+Step 2: Gate #1 (Cyborg ID validation) — only if mode carries a CyborgID
+Step 3: Run Report-Planning (scan + discover, mode-aware)
+Step 4: Run Report-Code (generate missing reports per mode's output locations)
+Step 5: (Repo mode only) Create/update in-repo /Aliens/{RepoName}/Dashboard.md
+Step 6: Run Report-Documentation (optional: index update)
+Step 7: Save RunRecord
 ```
 
 ---
 
 ## [13] Changelog
 
-- 26.00.02 (2026-03-12): **MAJOR FIX** — Project-Level Reports concept completely redefined. "Project" = ACC Planner CSV, NOT code domain folders (WebOS/WebSDK/WebApp etc.). Sections 4.2, 4.3, 9.1, 9.2, 9.3 rewritten. Domain-to-project mapping table removed + replaced with planner-based project discovery. Project reports now produce per-AppName Dashboards only (`/Report/Project/{AppName}/Dashboard.md`). Daily/Weekly/Monthly/Yearly at project level removed.
-- 26.00.01 (2026-03-12): Fixed Project folder understanding — `/Aliens/Project/` is ACC Planner CSV storage (not a code project). Added Section 9.4 (ACC Planner System), planner analytics in reports, missing planner detection and creation rule.
-- 26.00.00 (2026-03-12): Initial version — full Report workflow with Daily/Weekly/Monthly/Yearly/Dashboard support, dual output (Cyborg + Project level), CPU validation, filesystem scanning, and enterprise BI quality standards.
+- **26.01.00** (2026-04-19): **MAJOR — 5 Target Modes.** Added Mode 2 (`Project`), Mode 3 (`Project/{CyborgID}`), Mode 4 (`Repo`), Mode 5 (Alien email). **Breaking:** Mode 1 (`{CyborgID}`) no longer auto-generates Project reports — must call `Project` / `Project/{CyborgID}` mode separately. Added Sections [3.4] Target Mode Resolution, [14] Repo Mode, [15] Alien Mode. Expanded Outputs block with 5 mode-specific roots. Added `ACC_ERR_REPORT_TARGET_INVALID` and `ACC_ERR_REPORT_ALIEN_UNKNOWN` error codes.
+- 26.00.02 (2026-03-12): **MAJOR FIX** — Project-Level Reports concept redefined. "Project" = ACC Planner CSV, NOT code domain folders. Project reports produced per-AppName Dashboards only.
+- 26.00.01 (2026-03-12): Fixed Project folder understanding — `/Aliens/Project/` is ACC Planner CSV storage. Added Section 9.4 (ACC Planner System) and missing-planner detection rule.
+- 26.00.00 (2026-03-12): Initial version — full Report workflow with Daily/Weekly/Monthly/Yearly/Dashboard support, dual output (Cyborg + Project level), CPU validation, filesystem scanning, enterprise BI quality.
+
+---
+
+## [14] Repo Mode (`Target = 'Repo'`) — NEW in v26.01.00
+
+### 14.1 Purpose
+
+Workspace ke har repository ke liye **repo-level BI reports** generate karo, **aur** har repo ke andar wali
+`Dashboard.md` create/update karo.
+
+### 14.2 Repo Discovery (SSOT)
+
+```
+1. Read /Aliens/Cyborg/AnilCyborg/Ecosystem/Repos.Index.md
+2. Extract list of repo names (e.g., Cyborg, WebOS, WebSDK, WebApp, Blog, Course, ...)
+3. For each repo that exists on disk as a folder under /Aliens/ :
+   → include in run
+4. Repos listed in Repos.Index.md but folder missing on disk:
+   → skip + record in run log as "deferred: folder missing"
+```
+
+### 14.3 Per-Repo Execution
+
+For each repo `{RepoName}`:
+
+```
+Part A — External reports folder:
+  /Aliens/Report/Repo/{RepoName}/
+    ├── Daily_Report_YYYY-MM-DD.md       (per working day, filesystem-scoped to this repo)
+    ├── Weekly_Report_YYYY-WNN.md
+    ├── Monthly_Report_YYYY-MM.md
+    ├── Yearly_Report_YYYY.md
+    └── Dashboard.md
+
+Part B — In-repo dashboard:
+  /Aliens/{RepoName}/Dashboard.md
+    Create if missing; update if present.
+    Structure: enterprise BI dashboard (KPIs, trend chart, composition pie,
+    drill-down tables, risks, growth levers, next actions, glossary).
+    Domain-specific metrics per repo (do NOT template copy-paste).
+```
+
+### 14.4 Workflow-Owned In-Repo Dashboards (Exclusions)
+
+Yeh files Repo mode **NEVER overwrite** karega — kisi dedicated workflow ki ownership hai:
+
+| In-Repo Path | Owner Workflow |
+|:---|:---|
+| `/Aliens/Attendance/Dashboard.md` | `Attendance_Dashboard` |
+
+Agar future me aur dashboards workflow-owned bane, yahan add karo.
+
+### 14.5 Per-Repo Data Scope
+
+- **Filesystem scope** = `/Aliens/{RepoName}/**`
+- **Exclusions** = `.git`, `node_modules`, `__pycache__`
+- **Daily/Weekly/Monthly/Yearly** = activity scoped strictly to this repo folder
+- **Dashboard.md** (both external and in-repo) = full lifetime picture of this repo
+
+### 14.6 Skip Semantics
+
+Agar kisi repo ke liye filesystem scope me 0 files mile (empty repo), to:
+- External report folder skip (no Daily/Weekly/Monthly/Yearly generated)
+- In-repo `Dashboard.md` still create (minimal "no activity yet" placeholder)
+
+---
+
+## [15] Alien Mode (`Target = '{alias}@aliens.(company|id)'`) — NEW in v26.01.00
+
+### 15.1 Purpose
+
+Kisi **Alien** (human team member) ki consolidated reports banana. Report me:
+- Alien ki manual activity
+- Alien ke under control me jitne Cyborgs hain unki merged activity (each flagged with source CyborgID)
+
+### 15.2 Alien Validation
+
+```
+1. Parse target → alias = local-part of email
+2. Read /Aliens/manifest.json → Team.Aliens[]
+3. Find entry where email matches (@aliens.company or @aliens.id)
+4. If no match → STOP with ACC_ERR_REPORT_ALIEN_UNKNOWN
+5. Extract ControlsCyborgs[] (list of CyborgIDs this Alien controls)
+```
+
+**manifest.json shape (reference — see Ecosystem/Members.Aliens_vs_Cyborgs.md):**
+
+```json
+{
+  "Team": {
+    "Aliens": [
+      {
+        "alias": "himanshu",
+        "email": ["himanshu@aliens.company", "himanshu@aliens.id"],
+        "name": "Himanshu",
+        "role": "Developer",
+        "ControlsCyborgs": ["C1001", "C1002", "C1003", "C1004"]
+      }
+    ]
+  }
+}
+```
+
+### 15.3 Output Folder
+
+```
+/Aliens/Report/Alien/{alias}/
+├── Daily_Report_YYYY-MM-DD.md
+├── Weekly_Report_YYYY-WNN.md
+├── Monthly_Report_YYYY-MM.md
+├── Yearly_Report_YYYY.md
+└── Dashboard.md
+```
+
+### 15.4 Data Sources (merged)
+
+```
+1. MANUAL: /Aliens/.Alien/{alias}/**
+   → reviews, approvals, manual commits, recorded decisions
+   → attributed as "Manual"
+
+2. CYBORG-MERGED: /Aliens/Report/Cyborg/{CyborgID}/** for every CyborgID in ControlsCyborgs[]
+   → each data point retains SourceCyborgID tag
+   → in tables, always show: Date | CyborgID | Activity | Source=Cyborg
+   → Mode 1 Cyborg reports MUST exist first (prerequisite; if missing, log warning)
+```
+
+### 15.5 Attribution Rule (STRICT)
+
+Har merged entry me source **mandatory flag** hai:
+
+| Source | Label |
+|:---|:---|
+| Manual by the Alien | `Source: Manual` |
+| From Cyborg X | `Source: Cyborg C1001` |
+
+**FORBIDDEN:** Cyborg-done kaam ko "manual Alien work" ke tor par present karna.
+Yeh ethics aur audit integrity ka matter hai.
+
+### 15.6 Dashboard Composition
+
+Alien Dashboard me alag-alag sections:
+1. Executive KPI card (Alien-level rollup)
+2. Manual vs Cyborg split (pie)
+3. Per-Cyborg contribution breakdown
+4. Workstream distribution
+5. Peak days & velocity trends
+6. Ethics/attribution integrity check (100% of Cyborg entries flagged)
+
+---

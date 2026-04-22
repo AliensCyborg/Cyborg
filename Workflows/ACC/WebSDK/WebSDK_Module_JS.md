@@ -16,6 +16,7 @@ Requires:
 Calls:
   - "Workflows/ACC/WebSDK/WebSDK_Module_JS-Planning.md"
   - "Workflows/ACC/WebSDK/WebSDK_Module_JS-Code.md"
+  - "Workflows/ACC/WebSDK/WebSDK_Module_JS-Reaudit.md"
   - "Workflows/ACC/WebSDK/WebSDK_Module_JS-Documentation.md"
 Inputs:
   - Name: Targets
@@ -37,7 +38,8 @@ PermissionsRequested:
   NoDelete: true
 Execution:
   Mode: "orchestrator"
-  Order: ["Planning", "Code", "Documentation"]
+  Order: ["Planning", "Code", "Reaudit", "Documentation"]
+  MaxReauditIterations: 0
 FailureStrategy:
   FailFast: false
 Output:

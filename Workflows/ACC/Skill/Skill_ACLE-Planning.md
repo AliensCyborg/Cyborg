@@ -140,7 +140,7 @@ Status:
 - Python 3.10+ available?
 - edge-tts installed?
 - Converter script exists: `/Aliens/Cyborg/AlienCyborg/Code/convert_skill.py`?
-- Shared assets exist: `/Aliens/Skill_ACLE/assets/css/aliens-cinematic.css`?
+- Shared assets exist: `/Aliens/ACLE/assets/css/aliens-cinematic.css`?
 - Internet connectivity (for TTS)?
 
 # [08] Plan Generation (Output)

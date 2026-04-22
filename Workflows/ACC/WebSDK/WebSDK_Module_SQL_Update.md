@@ -18,6 +18,7 @@ Calls:
   - "Workflows/ACC/WebSDK/WebSDK_Module_SQL_Update-Audit.md"
   - "Workflows/ACC/WebSDK/WebSDK_Module_SQL_Update-Planning.md"
   - "Workflows/ACC/WebSDK/WebSDK_Module_SQL_Update-Code.md"
+  - "Workflows/ACC/WebSDK/WebSDK_Module_SQL_Update-Reaudit.md"
   - "Workflows/ACC/WebSDK/WebSDK_Module_SQL_Update-Documentation.md"
 Inputs:
   - Name: Targets
@@ -40,7 +41,8 @@ PermissionsRequested:
   NoDelete: true
 Execution:
   Mode: "orchestrator"
-  Order: ["Audit", "Planning", "Code", "Documentation"]
+  Order: ["Audit", "Planning", "Code", "Reaudit", "Documentation"]
+  MaxReauditIterations: 0
 UpdatePolicy:
   MissingTarget: "ERROR (do not create)"
   ExistingTarget: "Modify-only (no delete, no destructive changes unless approved)"

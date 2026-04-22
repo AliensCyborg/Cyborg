@@ -148,7 +148,7 @@ Row runnable tabhi hai jab:
 
 `{Developer_Username}` source:
 - Prefer `/Aliens/manifest.json` -> `Developer.Username`
-- Fallback: developer folder name (e.g. `AnilNayak`)
+- Fallback: developer folder name (e.g. `JaneDoe`)
 
 ---
 

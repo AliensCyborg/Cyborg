@@ -15,6 +15,7 @@ Requires:
 Calls:
   - "Workflows/ACC/WebSDK/WebSDK_Module_API-Planning.md"
   - "Workflows/ACC/WebSDK/WebSDK_Module_API-Code.md"
+  - "Workflows/ACC/WebSDK/WebSDK_Module_API-Reaudit.md"
   - "Workflows/ACC/WebSDK/WebSDK_Module_API-Documentation.md"
 Inputs:
   - Name: Targets
@@ -36,7 +37,8 @@ PermissionsRequested:
   NoDelete: true
 Execution:
   Mode: "orchestrator"
-  Order: ["Planning", "Code", "Documentation"]
+  Order: ["Planning", "Code", "Reaudit", "Documentation"]
+  MaxReauditIterations: 0
 FailureStrategy:
   FailFast: false
   OnPlanningFail: "skip Code+Documentation for that target"
@@ -126,7 +128,14 @@ Child workflow calls MUST pass at least:
 Calls:
 1) `Workflow("WebSDK_Module_API-Planning", "<ModuleName/ApiName>", "<Description>")`
 2) `Workflow("WebSDK_Module_API-Code", "<ModuleName/ApiName>", "<Description>")`
-3) `Workflow("WebSDK_Module_API-Documentation", "<ModuleName/ApiName>", "<Description>")`
+3) `Workflow("WebSDK_Module_API-Reaudit", "<ModuleName/ApiName>", "<Description>")`
+4) `Workflow("WebSDK_Module_API-Documentation", "<ModuleName/ApiName>", "<Description>")`
+
+Reaudit loop (Non-Negotiable):
+- `compliant`    => proceed to Documentation.
+- `noncompliant` => loop back to Planning -> Code -> Reaudit until compliant.
+- Documentation MUST NOT run while verdict is `noncompliant`.
+- See `_Common/Workflow_Plural.md` [05A] for full semantics.
 
 ---
 

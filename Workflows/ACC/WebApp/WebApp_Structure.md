@@ -47,6 +47,7 @@ Compatibility note:
 # [2] Child Chain (Default Order)
 1) `WebApp_Structure-Planning`
 2) `WebApp_Structure-Code`
+2.5) `WebApp_Structure-Reaudit` (loop back to Planning if `noncompliant`; see `_Common/Workflow_Plural.md` [05A])
 3) `WebApp_Structure-Documentation`
 
 ---

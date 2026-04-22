@@ -67,7 +67,7 @@ Neeche fields minimum required hain. Missing ho to **error** (aapka rule: “Mod
 {
   "SchemaVersion": "26.00.00",
   "Developer": {
-    "Username": "Anil",
+    "Username": "JaneDoe",
     "DisplayName": "AlienCyborg",
     "Role": "CoreTeam",
     "Timezone": "Asia/Kolkata"

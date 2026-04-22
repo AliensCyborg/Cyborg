@@ -151,9 +151,9 @@ Verify:
   - `/Aliens/Cyborg/AlienCyborg/Code/convert_article.py`
   - `/Aliens/Cyborg/AlienCyborg/Code/batch_wiki.py`
 - Shared assets exist:
-  - `/Aliens/Wiki_ACLE/assets/css/aliens-cinematic.css`
-  - `/Aliens/Wiki_ACLE/assets/js/aliens-cinematic.js`
-  - `/Aliens/Wiki_ACLE/assets/svg/aliens-logo-defs.svg`
+  - `/Aliens/ACLE/assets/css/aliens-cinematic.css`
+  - `/Aliens/ACLE/assets/js/aliens-cinematic.js`
+  - `/Aliens/ACLE/assets/svg/aliens-logo-defs.svg`
 - Internet connectivity (edge-tts requirement)
 
 ## [07.4] Risk Assessment

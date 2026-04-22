@@ -35,4 +35,5 @@ Existing app structure ko planner ke mutabiq update karna (no deletes).
 # [1] Child Chain
 1) `WebApp_Structure_Update-Planning`
 2) `WebApp_Structure_Update-Code`
+2.5) `WebApp_Structure_Update-Reaudit` (loop back to Planning if `noncompliant`; see `_Common/Workflow_Plural.md` [05A])
 3) `WebApp_Structure_Update-Documentation`

@@ -105,6 +105,15 @@ Call:
 Call:
 - Workflow( "WebApp_Component_Update-Code", "{AppName}/{ComponentName}", "{Description}" )
 
+## Step C.5: Reaudit (Post-Code Verification, Read-only)
+- Workflow( "WebApp_Component_Update-Reaudit", "{AppName}/{ComponentName}", "{Description}" )
+
+Loop Rule (Non-Negotiable):
+- `compliant`    => proceed to Documentation.
+- `noncompliant` => loop back to Planning -> Code -> Reaudit until compliant.
+- Documentation MUST NOT run while verdict is `noncompliant`.
+- See `_Common/Workflow_Plural.md` [05A].
+
 ## Step D: Documentation (Child Workflow)
 Call:
 - Workflow( "WebApp_Component_Update-Documentation", "{AppName}/{ComponentName}", "{Description}" )

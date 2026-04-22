@@ -124,7 +124,7 @@ Inside each item folder, minimum required files:
   "RunId": "20251224-094812-WebSDK_Module_API-9F3A",
   "WorkflowId": "WebSDK_Module_API",
   "WorkflowType": "Plural|Singular",
-  "Developer": "Anil",
+  "Developer": "JaneDoe",
   "Mode": "employee|assistant",
   "ApprovalMode": "auto|manual",
   "StartedAt": "2025-12-24T09:48:12+05:30",
@@ -346,7 +346,7 @@ If archive allowed, archive output must be written as artifact and logged.
 Example for:
 `Workflow("WebSDK_Module_API","User/UserNew,Account/AccountUpdate","...")`
 
-- `/Aliens/.Alien/Anil/Runs/20251224-094812-WebSDK_Module_API-9F3A/`
+- `/Aliens/.Alien/JaneDoe/Runs/20251224-094812-WebSDK_Module_API-9F3A/`
   - `Run.md`
   - `Run.json`
   - `Inputs.json`

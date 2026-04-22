@@ -69,7 +69,7 @@ require_once "Workflows/ACC/_Refs/ACC.Output.md"
 - Sirf specified article ko convert karo
 - Source Blog repo (`/Aliens/Blog/`) me koi modification forbidden
 - Converter scripts modify karna forbidden
-- Shared assets (`/Aliens/Blog_ACLE/assets/`) modify karna forbidden
+- Shared assets (`/Aliens/ACLE/assets/`) modify karna forbidden
 - Koi extra article add karna forbidden
 
 # [04] Inputs

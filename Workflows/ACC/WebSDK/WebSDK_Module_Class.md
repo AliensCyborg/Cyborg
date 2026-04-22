@@ -33,8 +33,10 @@ Requires:
 Calls:
   - "WebSDK_Module_Class-Planning"
   - "WebSDK_Module_Class-Code"
+  - "WebSDK_Module_Class-Reaudit"
   - "WebSDK_Module_Class-Documentation"
-DefaultOrder: ["Planning", "Code", "Documentation"]
+DefaultOrder: ["Planning", "Code", "Reaudit", "Documentation"]
+MaxReauditIterations: 0   # 0 = unlimited (Quality Over Speed). Advisory bound only; never used as a quality shortcut.
 PermissionsRequested:
   NoDelete: true
   ProdWrite: true
@@ -140,7 +142,14 @@ For each module target item, build payload:
 Then call in order:
 1) `Workflow("WebSDK_Module_Class-Planning", "{ModuleName}", "{Description}")`
 2) `Workflow("WebSDK_Module_Class-Code", "{ModuleName}", "{Description}")`
-3) `Workflow("WebSDK_Module_Class-Documentation", "{ModuleName}", "{Description}")`
+3) `Workflow("WebSDK_Module_Class-Reaudit", "{ModuleName}", "{Description}")`
+4) `Workflow("WebSDK_Module_Class-Documentation", "{ModuleName}", "{Description}")`
+
+Reaudit loop (Non-Negotiable):
+- If Reaudit verdict is `compliant`     => proceed to Documentation.
+- If Reaudit verdict is `noncompliant` => loop back to Planning -> Code -> Reaudit
+  until compliant. No iteration limit by default (Quality Over Speed).
+- Documentation MUST NOT run while Reaudit is `noncompliant`.
 
 > Child workflows MUST follow their own Singular common rules and must write outputs to declared locations.
 

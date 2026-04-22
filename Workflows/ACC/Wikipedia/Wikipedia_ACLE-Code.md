@@ -43,8 +43,8 @@ Requires:
 ExampleFiles:
   - "/Aliens/Cyborg/AlienCyborg/Code/convert_wikipedia.py"
   - "/Aliens/Cyborg/AlienCyborg/Code/batch_wikipedia_acle.py"
-  - "/Aliens/Wikipedia_ACLE/assets/css/aliens-cinematic.css"
-  - "/Aliens/Wikipedia_ACLE/assets/js/aliens-cinematic.js"
+  - "/Aliens/ACLE/assets/css/aliens-cinematic.css"
+  - "/Aliens/ACLE/assets/js/aliens-cinematic.js"
 Notes:
   - This workflow RUNS Python scripts — it does NOT write code files directly.
   - The "code" here is the conversion output (HTML + JSON + audio) not traditional source code.

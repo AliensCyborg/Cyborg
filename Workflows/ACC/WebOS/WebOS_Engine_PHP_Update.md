@@ -45,6 +45,7 @@ Calls:
   - WebOS_Engine_PHP_Update-Audit
   - WebOS_Engine_PHP_Update-Planning
   - WebOS_Engine_PHP_Update-Code
+  - WebOS_Engine_PHP_Update-Reaudit
   - WebOS_Engine_PHP_Update-Documentation
 Safety:
   NoDelete: true
@@ -138,7 +139,20 @@ Hard Rules:
 - Fix audit-detected gaps as part of the update.
 - All enterprise quality gates from `WebOS_Engine_PHP` apply (no skeleton outputs).
 
-### Step 4: Documentation
+### Step 4: Reaudit (Post-Code Verification, Read-only)
+Call:
+- Workflow("WebOS_Engine_PHP_Update-Reaudit", "{EngineName}", "{Description}")
+
+Expected Output:
+- `/Aliens/.Alien/{Developer_Username}/Planning/WebOS/Engine/PHP/{EngineName}.update.reaudit.md`
+
+Loop Rule (Non-Negotiable):
+- `compliant`    => proceed to Step 5 (Documentation).
+- `noncompliant` => loop back to Step 2 (Planning) -> Step 3 (Code) -> Step 4 (Reaudit) until compliant.
+- Documentation MUST NOT run while verdict is `noncompliant`.
+- See `_Common/Workflow_Plural.md` [05A] for full semantics.
+
+### Step 5: Documentation
 Call:
 - Workflow("WebOS_Engine_PHP_Update-Documentation", "{EngineName}", "{Description}")
 

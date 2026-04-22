@@ -347,7 +347,7 @@ table name matches extension file
 ### 15.1 Insert
 ```
 $User = Row('user')->Insert([
-    'name' => 'Anil',
+    'name' => 'Alex',
     'email' => 'x@y.com'
 ]);
 ```

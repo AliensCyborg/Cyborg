@@ -4,9 +4,9 @@ Type: Workflow_Plural
 Domain: Wikipedia
 Category: Wikipedia Article Download + Translation
 Language: Python
-Status: Draft
-Version: 26.03.00
-LastUpdated: 2026-03-14
+Status: Stable
+Version: 26.04.00
+LastUpdated: 2026-04-18
 EntryPoint: true
 Purpose: >
   Wikipedia raw articles ko download karo, EN me save karo,
@@ -40,14 +40,26 @@ SpeedMode:
     Workflow files exist karte hain (reference ke liye), but execution skip.
 Outputs:
   EN:
-    Path: "/Aliens/Wikipedia/EN/{Letter}{Seq}/{Slug}.md"
+    Path: "/Aliens/Wikipedia/EN/{Letter}/{Letter}{Seq:04d}/{Slug}.md"
     Description: "Raw wikitext downloaded from English Wikipedia"
   HIEN:
-    Path: "/Aliens/Wikipedia/HIEN/{Letter}{Seq}/{Slug}.md"
+    Path: "/Aliens/Wikipedia/HIEN/{Letter}/{Letter}{Seq:04d}/{Slug}.md"
     Description: "Hinglish (romanized Hindi + English mix) translated article"
   HI:
-    Path: "/Aliens/Wikipedia/HI/{Letter}{Seq}/{Slug}.md"
+    Path: "/Aliens/Wikipedia/HI/{Letter}/{Letter}{Seq:04d}/{Slug}.md"
     Description: "Hindi (Devanagari script) translated article"
+  FolderIndex:
+    Path: "/Aliens/Wikipedia/{Lang}/{Letter}/{Letter}{Seq:04d}/_index.jsonl"
+    Description: "Append-only per-bucket index (1 line per saved article in this bucket)"
+  LetterIndex:
+    Path: "/Aliens/Wikipedia/{Lang}/{Letter}/_letter_index.jsonl"
+    Description: "Append-only per-letter index across all buckets of a letter"
+  MasterIndex:
+    Path: "/Aliens/Wikipedia/_master_index.json"
+    Description: "Aggregated counts: total + by_letter + by_letter.folders (per language)"
+  ArticlesIndex:
+    Path: "/Aliens/Wikipedia/_articles.jsonl"
+    Description: "Append-only per-article completion log (slug, lang, folder, saved_at). Compact via compact_articles_index()."
   PlannerCSV:
     Path: "/Aliens/Project/{CyborgID}/Wikipedia_{Letter}.csv"
     Description: "Auto-generated Planner CSV from Wikipedia API enumeration"
@@ -74,16 +86,25 @@ Safety:
   InternetRequired: true
 Notes:
   - Internet MANDATORY: Wikipedia API for article download + OpenAI API for translation.
+  - **OPENAI_API_KEY env var REQUIRED for HIEN/HI translation steps.**
+    Without it, run with `--download-only` (EN-only mode) OR pipeline fails fast.
   - Wikipedia raw URL pattern: https://en.wikipedia.org/w/index.php?title={Title}&action=raw
   - Wikipedia sitemap: https://en.wikipedia.org/w/rest.php/site/v1/sitemap/0
   - MediaWiki allpages API for article enumeration by letter prefix.
-  - Folder structure: /Aliens/Wikipedia/{Language}/{Letter}{Seq:04d}/{Slug}.md
-  - Max 1000 files per folder. After 1000 → next sequence folder (A0001 → A0002 → ...).
-  - Same folder numbering across EN/HIEN/HI for consistency.
+  - Folder structure (scalable for crore-scale):
+      /Aliens/Wikipedia/{Lang}/{Letter}/{Letter}{Seq:04d}/{Slug}.md
+      Example: /Aliens/Wikipedia/EN/A/A0001/Albert_Einstein.md
+  - Letter sub-dir keeps {Lang}/ enumeration to ~26 entries (fast at scale).
+  - Max 1000 files per bucket folder. Bucket full -> next sequence (A0001 -> A0002).
+  - Up to 9999 buckets per letter -> 9.99M articles per letter -> 260M total cap.
+  - Same bucket name reused across EN/HIEN/HI for cross-language consistency.
+  - Index files (3-tier, append-only JSONL + 1 master JSON, see Outputs):
+      _index.jsonl (per-bucket), _letter_index.jsonl (per-letter),
+      _master_index.json (global counts), _articles.jsonl (global completion log).
   - Translation uses LLM (OpenAI gpt-4o-mini default). API key via OPENAI_API_KEY env var.
   - Wikitext markup 100% preserved during translation (templates, links, images, refs, categories).
   - SpeedMode = Planning + Documentation bypass for maximum throughput.
-  - Article slug = Wikipedia title with spaces → underscores (Albert Einstein → Albert_Einstein).
+  - Article slug = Wikipedia title with spaces -> underscores (Albert Einstein -> Albert_Einstein).
   - Converter scripts: /Aliens/Cyborg/AlienCyborg/Code/wikipedia_article.py (core) +
     batch_wikipedia.py (batch orchestrator + CSV planner).
   - Progress: /Aliens/.Alien/{Developer_Username}/State/Wikipedia_Article/batch_progress.json
@@ -130,47 +151,104 @@ Forbidden:
 ## [04.2] Output Structure (SSOT — WRITE)
 ```
 /Aliens/Wikipedia/
-  ├── EN/                          # English (raw wikitext from Wikipedia)
-  │    ├── A0001/                  # First 1000 articles starting with A
-  │    │    ├── Albert_Einstein.md
-  │    │    ├── Algorithm.md
-  │    │    └── ... (up to 1000 files)
-  │    ├── A0002/                  # Next 1000 articles starting with A
-  │    │    └── ...
-  │    ├── B0001/
+  ├── _master_index.json          # global counts: total + by_letter + folders
+  ├── _articles.jsonl             # append-only: 1 line per save (slug, lang, folder, saved_at)
+  ├── _articles_compact.json      # (optional) periodic dedup snapshot via compact_articles_index()
+  ├── EN/                         # English (raw wikitext from Wikipedia)
+  │    ├── A/                     # Letter sub-dir (keeps EN/ enumeration small)
+  │    │    ├── _letter_index.jsonl  # append-only: 1 line per article in EN/A/**
+  │    │    ├── A0001/             # Bucket: first 1000 articles starting with A
+  │    │    │    ├── _index.jsonl     # append-only per-bucket index (1 line per file)
+  │    │    │    ├── Albert_Einstein.md
+  │    │    │    ├── Algorithm.md
+  │    │    │    └── ... (up to 1000 .md files)
+  │    │    ├── A0002/             # Next bucket
+  │    │    │    └── ...
+  │    │    └── .../
+  │    ├── B/
   │    │    └── ...
   │    └── .../
-  ├── HIEN/                        # Hinglish translated (same structure)
-  │    ├── A0001/
-  │    │    ├── Albert_Einstein.md
-  │    │    └── ...
+  ├── HIEN/                       # Hinglish translated (mirror structure)
+  │    ├── A/
+  │    │    ├── _letter_index.jsonl
+  │    │    ├── A0001/
+  │    │    │    ├── _index.jsonl
+  │    │    │    ├── Albert_Einstein.md
+  │    │    │    └── ...
+  │    │    └── .../
   │    └── .../
-  └── HI/                          # Hindi translated (same structure)
-       ├── A0001/
-       │    ├── Albert_Einstein.md
-       │    └── ...
+  └── HI/                         # Hindi translated (mirror structure)
+       ├── A/
+       │    ├── _letter_index.jsonl
+       │    ├── A0001/
+       │    │    ├── _index.jsonl
+       │    │    ├── Albert_Einstein.md
+       │    │    └── ...
+       │    └── .../
        └── .../
 ```
 
 Key rules:
-- **Max 1000 files per folder**. Count sirf `.md` files.
-- Folder naming: `{Letter}{Seq:04d}` — A0001, A0002, B0001, C0001, etc.
-- **Same folder assignment across all 3 languages**. Agar EN me Albert_Einstein A0001 me hai,
-  to HIEN aur HI me bhi A0001 me save hoga.
+- **Letter sub-dir** under each language keeps `{Lang}/` enumeration to 26 entries
+  (massive perf win at crore-scale; OS doesn't have to scan thousands of buckets).
+- **Max 1000 .md files per bucket folder**. Index files (`_index.jsonl`) and other
+  underscore-prefixed metadata files do NOT count toward the 1000 limit.
+- Bucket naming: `{Letter}{Seq:04d}` — A0001, A0002, B0001, C0001, etc.
+- **Same bucket name reused across all 3 languages.** Albert_Einstein → EN/A/A0001/,
+  HIEN/A/A0001/, HI/A/A0001/ (all three mirror).
 - Slug = article title with spaces → underscores: `Albert Einstein` → `Albert_Einstein`
-- File extension: `.md` (raw wikitext stored as markdown)
+- File extension: `.md` (raw wikitext stored as markdown for editor friendliness)
+- Capacity: 9999 buckets/letter × 1000 files = ~10M articles per letter → 260M total cap.
+
+## [04.2.1] Index System (SSOT — 3-tier scalable)
+
+**Why JSONL?** Append-only writes are O(1) regardless of file size, safe for parallel
+workers (atomic line append on POSIX/NTFS), streamable for analytics. Handles crore-row
+files gracefully without rewrite.
+
+**Files:**
+
+| Index | Path | Type | Purpose |
+|---|---|---|---|
+| Per-bucket | `{Lang}/{Letter}/{Bucket}/_index.jsonl` | JSONL append | 1 line per file in this bucket |
+| Per-letter | `{Lang}/{Letter}/_letter_index.jsonl` | JSONL append | 1 line per file under this letter |
+| Master | `/Aliens/Wikipedia/_master_index.json` | JSON atomic | global counts + by_letter + folders breakdown |
+| Global articles | `/Aliens/Wikipedia/_articles.jsonl` | JSONL append | 1 line per save event (any lang, any article) |
+| Compact snapshot | `/Aliens/Wikipedia/_articles_compact.json` | JSON (optional) | dedup'd state via `compact_articles_index()` |
+
+**Per-line schema (JSONL):**
+```json
+{"slug":"Albert_Einstein","lang":"EN","file":"Albert_Einstein.md","size":42891,"saved_at":"2026-04-18T20:14:55","source":"https://en.wikipedia.org/w/index.php?title=Albert_Einstein&action=raw"}
+```
+
+**Master schema (JSON):**
+```json
+{
+  "schema": "AliensWikipediaMaster/1",
+  "created_at": "2026-04-18T20:14:00",
+  "updated_at": "2026-04-18T20:14:55",
+  "counts": {"total": {"EN": 1234, "HIEN": 1234, "HI": 1234}},
+  "by_letter": {
+    "A": {"EN": 500, "HIEN": 500, "HI": 500,
+          "folders": {"A0001": {"EN": 500, "HIEN": 500, "HI": 500}}}
+  }
+}
+```
+
+**Compaction:** for crore-scale `_articles.jsonl` (deduped state) call
+`compact_articles_index()` periodically → emits `_articles_compact.json` keyed by slug.
 
 ## [04.3] Folder Assignment Logic
 ```
 function get_target_folder(language, letter):
-    base = /Aliens/Wikipedia/{language}/
-    # Find all existing folders for this letter
+    base = /Aliens/Wikipedia/{language}/{letter}/        # NEW: letter sub-dir
+    # Find all existing bucket folders for this letter
     folders = sorted(dirs matching {letter}????)
     if no folders:
         create {letter}0001/
         return {letter}0001/
     last_folder = folders[-1]
-    if count_md_files(last_folder) >= 1000:
+    if count_md_files(last_folder) >= 1000:               # only .md counted
         next_seq = int(last_folder.name[1:]) + 1
         create {letter}{next_seq:04d}/
         return {letter}{next_seq:04d}/
@@ -178,8 +256,8 @@ function get_target_folder(language, letter):
 ```
 
 Cross-language sync:
-- Process article → determine folder from EN first
-- Use SAME folder name for HIEN and HI (create if needed)
+- Process article → determine bucket from EN first
+- Use SAME bucket name for HIEN and HI under their own `{Lang}/{Letter}/` (auto-create)
 
 ## [04.4] Translation Rules (Non-Negotiable)
 Translation backend: LLM (OpenAI gpt-4o-mini default, configurable)

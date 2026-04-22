@@ -16,6 +16,7 @@ Requires:
 Calls:
   - "Workflows/ACC/WebSDK/WebSDK_Module_Screen-Planning.md"
   - "Workflows/ACC/WebSDK/WebSDK_Module_Screen-Code.md"
+  - "Workflows/ACC/WebSDK/WebSDK_Module_Screen-Reaudit.md"
   - "Workflows/ACC/WebSDK/WebSDK_Module_Screen-Documentation.md"
 Inputs:
   - Name: Targets
@@ -31,7 +32,8 @@ Defaults:
   NoDelete: true
 Execution:
   Mode: "orchestrator"
-  Order: ["Planning", "Code", "Documentation"]
+  Order: ["Planning", "Code", "Reaudit", "Documentation"]
+  MaxReauditIterations: 0
 Output:
   RunRecordsRoot: "/Aliens/.Alien/{Developer_Username}/Runs/{RunId}/"
   PlanningRoot: "/Aliens/.Alien/{Developer_Username}/Planning/"

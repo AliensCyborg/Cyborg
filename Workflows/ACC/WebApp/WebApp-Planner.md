@@ -143,7 +143,7 @@ Column notes (SSOT meanings):
 - `Assign` = developer username (task owner) (STRICT).
 	- Execution rule: current machine developer MUST match `Assign` for any task with `Status=0`.
 	- If mismatch => runner must fail fast (do not execute unassigned task).
-	- Example: `Assign=AnilNayak`
+	- Example: `Assign=JaneDoe`
 
 Progress tracking (CSV writeback; STRICT when columns exist):
 - `code_lines` = is row ke code run me **sirf primary code artifact** (usually `Code_Path`) ke kitne lines create/update hue.

@@ -409,7 +409,7 @@ Distribution example (5 PCs, 44 programs):
 
 # [10] Safety Contract (Enforcement)
 1. Source Course repo (`/Aliens/Course/`) = **READ-ONLY**. Koi file create/modify/delete nahi.
-2. Shared assets (`/Aliens/Course_ACLE/assets/`) = **DO NOT MODIFY** via this workflow.
+2. Shared assets (`/Aliens/ACLE/assets/`) = **DO NOT MODIFY** via this workflow.
 3. Converter scripts = **DO NOT MODIFY** via this workflow (scope outside).
 4. `batch_progress.json` = **DO NOT MANUALLY EDIT** jab batch running ho. (Path: `/Aliens/.Alien/{Developer_Username}/State/Course_ACLE/batch_progress.json`)
 5. NoDelete = true globally.

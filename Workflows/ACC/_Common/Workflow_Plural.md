@@ -151,7 +151,45 @@ Plural workflow execution always follows this canonical pipeline:
 
 Default execution order:
 - Planning => Code => Documentation
+- For code-producing workflows, the **recommended** order is:
+  Planning => Code => **Reaudit** => Documentation
 (Plural workflow may override order ONLY if explicitly required in its YAML header.)
+
+### [05A] Reaudit Step (Universal; Opt-in via Calls list)
+For any code-producing Plural workflow whose `Calls` list includes a child of
+type `Workflow_Singular-Reaudit` (typically named `<Parent>-Reaudit`):
+- Run that Reaudit child **after** Code and **before** Documentation.
+- Reaudit is **read-only on Code** (Non-Negotiable).
+- Reaudit MUST consume Planning's `## Required Items` block + `## Out-of-Scope`
+  block + the freshly written code state.
+- Reaudit produces a Compliance Matrix + verdict (`compliant` | `noncompliant`).
+
+Loop semantics (Quality > Speed; Non-Negotiable):
+- Verdict `compliant`     => proceed to Documentation.
+- Verdict `noncompliant`  => orchestrator MUST loop back to Planning (NOT Code).
+  Planning refines Required Items / Out-of-Scope based on Reaudit findings.
+  Then Code re-runs, then Reaudit re-runs (Iteration N+1).
+- No iteration limit by default (`MaxReauditIterations: 0`). A positive bound
+  is advisory only; reaching it MUST raise `ACC_ERR_REAUDIT_MAX_ITERATIONS`
+  and stop, never auto-promote `noncompliant` to `compliant`.
+- Documentation MUST NOT run while verdict is `noncompliant`.
+
+Backward compatibility:
+- Reaudit is **opt-in**. Workflows whose Calls list does NOT include a Reaudit
+  child continue to work as Planning => Code => Documentation.
+- New code-producing workflows SHOULD adopt Reaudit. Existing workflows MAY
+  adopt Reaudit incrementally.
+
+### [05B] Universal Strict Prompt Compliance (Cross-Reference)
+Every Plural workflow inherits, via its Singular Planning + Code children:
+- `Workflow_Singular-Planning.md` Section 18 — `## Required Items` block (mandatory)
+- `Workflow_Singular-Planning.md` Section 19 — `## Out-of-Scope` block (mandatory)
+- `Workflow_Singular-Code.md` Section [06A] — Strict Scope Compliance
+
+Plural orchestrator MUST surface in the final RunSummary:
+- Number of Required Items (RI-NNN) declared by Planning
+- Reaudit verdict (when Reaudit child ran)
+- Out-of-scope violations count (when Reaudit child ran)
 
 ### 5.1 Target Exists => Route to Update (SSOT)
 If a Plural workflow is invoked and its primary `TargetFilePath` already exists:
@@ -314,3 +352,6 @@ Because this file affects 10,000+ workflows, any change MUST:
 
 ### Changelog
 - 26.00.00 (2025-12-24): Initial Common Rules for Plural Workflows
+- 26.01.00 (2026-04-18): Added [05A] Reaudit step (universal opt-in) +
+  [05B] Strict Prompt Compliance cross-reference. Backward compatible.
+  Author: AlienCyborg.

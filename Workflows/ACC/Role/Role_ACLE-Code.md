@@ -70,7 +70,7 @@ require_once "Workflows/ACC/_Refs/ACC.Output.md"
 - Sirf specified role ko convert karo
 - Source Role repo (`/Aliens/Role/`) me koi modification forbidden
 - Converter scripts modify karna forbidden
-- Shared assets (`/Aliens/Role_ACLE/assets/`) modify karna forbidden
+- Shared assets (`/Aliens/ACLE/assets/`) modify karna forbidden
 - Koi extra role add karna forbidden
 
 # [04] Inputs

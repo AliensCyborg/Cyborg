@@ -113,7 +113,20 @@ Call:
 Expected Code Output:
 - `/Aliens/WebOS/{LatestVersion}/Unit/bash/{EngineName}.sh`
 
-## Step C: Documentation
+## Step C: Reaudit (Post-Code Verification, Read-only)
+Call:
+- Workflow("WebOS_Engine_Bash-Reaudit", "{EngineName}", "{Description}")
+
+Expected Reaudit Output:
+- `/Aliens/.Alien/{Developer_Username}/Planning/WebOS/Engine/Bash/{EngineName}.reaudit.md`
+
+Loop Rule (Non-Negotiable):
+- `compliant`    => proceed to Step D (Documentation).
+- `noncompliant` => loop back to Step A (Planning) -> Step B (Code) -> Step C (Reaudit) until compliant.
+- Documentation MUST NOT run while verdict is `noncompliant`.
+- See `_Common/Workflow_Plural.md` [05A] for full semantics.
+
+## Step D: Documentation
 Call:
 - Workflow("WebOS_Engine_Bash-Documentation", "{EngineName}", "{Description}")
 

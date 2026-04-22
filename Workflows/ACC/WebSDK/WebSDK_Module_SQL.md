@@ -16,6 +16,7 @@ Requires:
 Calls:
   - "Workflows/ACC/WebSDK/WebSDK_Module_SQL-Planning.md"
   - "Workflows/ACC/WebSDK/WebSDK_Module_SQL-Code.md"
+  - "Workflows/ACC/WebSDK/WebSDK_Module_SQL-Reaudit.md"
   - "Workflows/ACC/WebSDK/WebSDK_Module_SQL-Documentation.md"
 Inputs:
   - Name: Targets
@@ -37,7 +38,8 @@ PermissionsRequested:
   NoDelete: true
 Execution:
   Mode: "orchestrator"
-  Order: ["Planning", "Code", "Documentation"]
+  Order: ["Planning", "Code", "Reaudit", "Documentation"]
+  MaxReauditIterations: 0
 FailureStrategy:
   FailFast: false
   OnPlanningFail: "skip Code+Documentation for that target"
